@@ -1,20 +1,20 @@
 const $ = (selector, target) => (target || document).querySelector(selector);
+const $$ = (selector, target) => (target || document).querySelectorAll(selector) || [];
 const parent = $('.cards-container');
 
 for (let elementData of data.events){
   const type = findType(elementData);
-  console.log(elementData, "elementData");
   const element = makeClone(type);
+  setIcon(element, elementData);
   setAttr(element, elementData, 'title');
   setAttr(element, elementData, 'source');
   setAttr(element, elementData, 'time');
   setDescription(element, elementData);
-  setIcon(element, elementData);
   if (type === 'average-card-music') setMusic(element, elementData)
   if (type === 'average-card-temperature')  setTemperatureAndHumidity(element, elementData)
   parent.appendChild(element);
 }
-
+checkTitles();
 function findType(el){
   if (el.size ==='s') return 'small-card-normal';
   if (el.data && el.data.temperature) return 'average-card-temperature';
@@ -31,9 +31,9 @@ const elem = $(`.card__${attr}`, el);
 elem.innerHTML = data[attr];
 }
 function setDescription(el, data){
-  const elem = $('.card__description-line', el);
-  if (data.description) elem.innerHTML = data.description;
-  else elem.style.display = 'none';
+  const desc = $('.card__description-line', el);
+  if (data.description) desc.innerHTML = data.description;
+  else desc.style.display = 'none';
 }
 function setTemperatureAndHumidity(el, data){
   const  tempEl = $('.card__temperature-inner', el);
@@ -60,4 +60,22 @@ function makeClone(template){
   const fragment = $(`#${template}`).content
   const el = document.importNode(fragment, true)
   return el;
+}
+ 
+function checkHeight(element){
+  const styles  = getComputedStyle(element);
+  if ((Math.ceil(parseFloat(styles.fontSize)) * 1.2 * 2) < element.offsetHeight) return false
+  else return true;
+}
+function checkTitles(){
+const titles = $$('.card__title');
+for (let title of titles){
+  if(!checkHeight(title)){
+    title.innerHTML = title.innerHTML + '...';
+    while(!checkHeight(title)){
+      title.innerHTML = title.innerHTML.slice(0, -4) + '...';
+    }
+  }
+}
+
 }
