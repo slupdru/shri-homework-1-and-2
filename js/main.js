@@ -112,7 +112,7 @@ class ImageWithGesture{
 }
 
 if (this.eventsCash.length == 2) {
-  var curDiff = Math.abs(this.eventsCash[0].clientX - this.eventsCash[1].clientX);
+  var curDiff = Math.sqrt(Math.pow(this.eventsCash[0].clientX - this.eventsCash[1].clientX, 2) + Math.pow(this.eventsCash[0].clientY - this.eventsCash[1].clientY, 2));
   if (this.prevDiff > 0) {
       if (this.scale + (curDiff - this.prevDiff)/100 > 1){
          this.scale = this.scale + (curDiff - this.prevDiff)/100
