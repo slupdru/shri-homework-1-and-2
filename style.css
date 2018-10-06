@@ -113,6 +113,15 @@ body{
 .card:hover .card__hovered-icon{
   display: block;
 }
+.card:not(.card_critical):hover{
+  background: #F3F3F3;
+  box-shadow: 0 2px 6px 0 rgba(197,186,186,0.50);
+}
+.card:hover .card__white-block{
+  background: #F3F3F3;
+  box-shadow: 0 2px 6px 0 rgba(197,186,186,0.50);
+}
+
 .card__hovered-icon_close{
   top:20px;
 }
