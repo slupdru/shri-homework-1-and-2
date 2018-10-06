@@ -77,5 +77,101 @@ for (let title of titles){
     }
   }
 }
+}
+class ImageWithGesture{
+  constructor(cardWithImage){
+    this.loger = $('.card__description-line', cardWithImage);
+    this.infoLine = $('.card__onlitouch-line', cardWithImage);
+    this.zoomEl = $('.card__zoom-value', cardWithImage);
+    this.infoLine.style.display = 'flex';
+    this.imageContainer = $('.card__image-container',cardWithImage);
+    this.image = $('.card__picture-line-zoom', cardWithImage);
+    this.prevX = 0;
+    this.scale = 1;
+    this.eventsCash = [];
+    this.prevDiff = -1;
+    this.x = 0;
+    this.init();
+  }
+  updateTranslate(){
+    this.image.style.transform = `scale(${this.scale}) translateX(${this.x}px)`; 
+  }
+  updateScale(){
+    this.image.style.transform = `scale(${this.scale}) translateX(${this.x}px)`;
+    this.zoomEl.innerHTML = `${Math.round(this.scale*100)}%`; 
+  }
+  onPoinerDown (ev){
+    this.eventsCash.push(ev);
+  }
+  onPointerMove(ev){
+ for (var i = 0; i < this.eventsCash.length; i++) {
+  if (ev.pointerId == this.eventsCash[i].pointerId) {
+     this.eventsCash[i] = ev;
+  break;
+  }
+}
 
+if (this.eventsCash.length == 2) {
+  var curDiff = Math.abs(this.eventsCash[0].clientX - this.eventsCash[1].clientX);
+  if (this.prevDiff > 0) {
+      if (this.scale + (curDiff - this.prevDiff)/100 > 1){
+         this.scale = this.scale + (curDiff - this.prevDiff)/100
+      }
+      else{
+        this.scale = 1;
+      }
+
+    this.updateScale()
+  }
+  this.prevDiff = curDiff;
+}
+if (this.eventsCash.length == 1) {
+  var cur = ev.offsetX;
+  if (this.prevX > 0) {
+    this.x = this.x + cur - this.prevX;
+    this.updateTranslate()
+  }
+    this.prevX = cur;
+}
+
+  }
+  onPointerUp(ev){
+  this.remove_event(ev);
+  if (this.eventsCash.length < 2) {
+    this.prevDiff = -1;
+  }
+  if (this.eventsCash.length < 1){
+    // if (this.isStarted) this.x = this.x + ev.offsetX - this.startX;
+    this.prevX = -1;
+  }
+
+  }
+
+  remove_event(ev) {
+    for (var i = 0; i < this.eventsCash.length; i++) {
+      if (this.eventsCash[i].pointerId == ev.pointerId) {
+        this.eventsCash.splice(i, 1);
+        break;
+      }
+    }
+   }
+
+  init(){
+    this.imageContainer.addEventListener('pointerdown', this.onPoinerDown.bind(this));
+    this.imageContainer.addEventListener('pointerup', this.onPointerUp.bind(this));
+    this.imageContainer.addEventListener('pointercancel', this.onPointerUp.bind(this));
+    this.imageContainer.addEventListener('pointerleave', this.onPointerUp.bind(this));
+    this.imageContainer.addEventListener('pointermove', this.onPointerMove.bind(this));
+  }
+}
+if (is_touch_device()){
+  const cardsWithPhoto = $$('.card_large.card_critical')
+  for (let cardWithPhoto of cardsWithPhoto){
+    new ImageWithGesture(cardWithPhoto);
+  }
+
+}
+
+function is_touch_device() {
+  return !!('ontouchstart' in window);
 }
