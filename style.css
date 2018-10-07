@@ -120,7 +120,7 @@ body {
 .card:not(.card_mobile):hover .card__hovered-icon {
   display: block;
 }
-.card:not(.card_critical, .card_mobile):hover {
+.card:not(.card_critical):not(.card_mobile):hover {
   background: #f3f3f3;
   box-shadow: 0 2px 6px 0 rgba(197, 186, 186, 0.5);
 }
@@ -337,14 +337,15 @@ body {
 .card__picture-line-zoom {
   pointer-events: none;
   transform: scale(2);
+  transform-origin: left top;
 }
 .card__scrollbar {
   width: 50%;
   position: absolute;
   height: 3px;
   border-radius: 5px;
-  bottom: 0;
-  background-color: #000;
+  bottom: 1px;
+  background-color: #fff;
   z-index: 5;
 }
 

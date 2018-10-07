@@ -143,7 +143,7 @@ var data = {
             "description": "Робопылесос не смог сменить свое местоположение в течение последних 3 минут. Похоже, ему нужна помощь.",
             "icon": "cam",
             "data": {
-                "image": "get_it_from_mocks_:3.jpg"
+                "image": "bitmap.png"
             },
             "size": "l"
         },
