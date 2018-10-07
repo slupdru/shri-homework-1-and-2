@@ -9,15 +9,16 @@
   <link rel="stylesheet" href="style.css">
   <title>Document</title>
 </head>
+
 <body>
   <header>
     <nav class="menu">
       <img class="menu__logo" src="./images/ЯндексДом@2x.png">
       <div class="menu__collaps-block">
-          <a class="menu__item menu__item_active">События</a>
-          <a class="menu__item">Сводка</a>
-          <a class="menu__item">Устройства</a>
-          <a class="menu__item">Сценарии</a>
+        <a class="menu__item menu__item_active">События</a>
+        <a class="menu__item">Сводка</a>
+        <a class="menu__item">Устройства</a>
+        <a class="menu__item">Сценарии</a>
       </div>
       <img src="./images/icon_list_m@1x.svg" alt="" class="munu__mobile-button">
     </nav>
@@ -33,186 +34,186 @@
   </main>
   <footer class="footer">
     <div class="footer__leftblock">
-      <a  class="footer__element">Помощь</a>
-      <a  class="footer__element">Обратная связь</a>
-      <a  class="footer__element">Разработчикам</a>
-      <a  class="footer__element">Условия пользования</a>
+      <a class="footer__element">Помощь</a>
+      <a class="footer__element">Обратная связь</a>
+      <a class="footer__element">Разработчикам</a>
+      <a class="footer__element">Условия пользования</a>
     </div>
     <div class="footer__rightblock">
-        © 2001–2017  ООО «Яндекс»
+      © 2001–2017 ООО «Яндекс»
     </div>
   </footer>
 </body>
 <template id="average-card-temperature">
-    <div class="card card_average card_info card_type1">
-        <div class="card__container">
-          <div>
-          <div class="card__title-line">
-            <img class="card__icon" />
-            <div class="card__title"></div>
-          </div>
-          <div class="card__subtitle-line">
-            <div class="card__source"></div>
-            <div class="card__time"></div>
-          </div>
+  <div class="card card_average card_info card_type1">
+    <div class="card__container">
+      <div>
+        <div class="card__title-line">
+          <img class="card__icon" />
+          <div class="card__title"></div>
         </div>
-          <div class="card__description-line">
-          </div>
-          <div class="card__info-line">
-            <div class="card__temperature">
-              <span>Температура: </span><span class="card__temperature-text card__temperature-inner"></span>
-            </div>
-            <div class="card__temperature">
-              <span>Влажность: </span><span class="card__temperature-text card__humidity"></span>
-            </div>
-          </div>
-          <img src="./images/cross.svg" class="card__hovered-icon card__hovered-icon_close">
-          <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
-        </div>
-      </div>
-</template>
-<template id="average-card-critical">
-    <div class="card card_average card_critical card_type1">
-        <div class="card__container">
-          <div class="card__critical-block">
-            <div class="card__title-line">
-              <img class="card__icon" />
-              <div class="card__title"></div>
-            </div>
-            <div class="card__subtitle-line">
-              <div class="card__source"></div>
-              <div class="card__time"></div>
-            </div>
-          </div>
-          <div class="card__white-block">
-            <div class="card__description-line">
-            </div>
-            <img src="./images/cross-white.svg" class="card__hovered-icon card__hovered-icon_close">
-            <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
-          </div>
-        </div>
-      </div>
-</template>
-<template id="average-card-music">
-    <div class="card card_average card_info card_music">
-        <div class="card__container">
-          <div>
-          <div class="card__title-line">
-            <img class="card__icon" />
-            <div class="card__title"></div>
-          </div>
-          <div class="card__subtitle-line">
-            <div class="card__source"></div>
-            <div class="card__time"></div>
-          </div>
-        </div>
-        <div>
-          <div class="card__description-line">
-          </div>
-          <div class="card__music">
-            <img class="card__albumcover">
-            <div class="card__music-info">
-              <div class="card__music-name">
-              </div>
-              <div class="card__timelineblock">
-                <div class="card__timeline-container">
-                  <div class="card__timeline"></div>
-                  <div class="card__timeregulator"></div>
-                </div>
-                <div class="card__music-time card__music-length">
-                </div>
-              </div>     
-            </div>
-          </div>
-          <div class="card__player">
-            <div class="card__player-buttons-container">
-            <img src="./images/Prev.svg"  class="card__player-button card__player-button_left">
-            <img src="./images/Prev.svg"  class="card__player-button card__player-button_right">
-            </div>
-            <div class="card__timelineblock">
-                <div class="card__timeline-container">
-                  <div class="card__timeline"></div>
-                  <div class="card__timeregulator"></div>
-                </div>
-                <div class="card__music-time card__music-volume">
-                </div>
-              </div>     
-          </div>
-        </div>
-          <img src="./images/cross.svg" class="card__hovered-icon card__hovered-icon_close">
-          <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
-        </div>
-      </div>
-</template>
-<template id="average-card-buttons">
-    <div class="card card_average card_info card_buttons">
-        <div class="card__container">
-          <div>
-          <div class="card__title-line">
-            <img class="card__icon" />
-            <div class="card__title"></div>
-          </div>
-          <div class="card__subtitle-line">
-            <div class="card__source"></div>
-            <div class="card__time"></div>
-          </div>
-        </div>
-        <div>
-          <div class="card__description-line">
-          </div>
-          <div class="card__buttons-line">
-            <a class="card__button card__button_yes">Да</a>
-            <a class="card__button card__button_no">Нет</a>
-          </div>
-          </div>
-          <img src="./images/cross.svg" class="card__hovered-icon card__hovered-icon_close">
-          <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
-        </div>
-      </div>
-</template>
-<template id="small-card-normal">
-    <div class="card card_small card_info">
-        <div class="card__container">
-          <div>
-          <div class="card__title-line">
-            <img class="card__icon" />
-            <div class="card__title"></div>
-          </div>
-          <div class="card__subtitle-line">
+        <div class="card__subtitle-line">
           <div class="card__source"></div>
           <div class="card__time"></div>
-          </div>
-        </div>
-          <div class="card__description-line">
-          </div>
-          <img src="./images/cross.svg" class="card__hovered-icon card__hovered-icon_close">
-          <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
         </div>
       </div>
+      <div class="card__description-line">
+      </div>
+      <div class="card__info-line">
+        <div class="card__temperature">
+          <span>Температура: </span><span class="card__temperature-text card__temperature-inner"></span>
+        </div>
+        <div class="card__temperature">
+          <span>Влажность: </span><span class="card__temperature-text card__humidity"></span>
+        </div>
+      </div>
+      <img src="./images/cross.svg" class="card__hovered-icon card__hovered-icon_close">
+      <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
+    </div>
+  </div>
+</template>
+<template id="average-card-critical">
+  <div class="card card_average card_critical">
+    <div class="card__container">
+      <div class="card__critical-block">
+        <div class="card__title-line">
+          <img class="card__icon" />
+          <div class="card__title"></div>
+        </div>
+        <div class="card__subtitle-line">
+          <div class="card__source"></div>
+          <div class="card__time"></div>
+        </div>
+      </div>
+      <div class="card__white-block">
+        <div class="card__description-line">
+        </div>
+        <img src="./images/cross-white.svg" class="card__hovered-icon card__hovered-icon_close">
+        <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
+      </div>
+    </div>
+  </div>
+</template>
+<template id="average-card-music">
+  <div class="card card_average card_info card_music">
+    <div class="card__container">
+      <div>
+        <div class="card__title-line">
+          <img class="card__icon" />
+          <div class="card__title"></div>
+        </div>
+        <div class="card__subtitle-line">
+          <div class="card__source"></div>
+          <div class="card__time"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card__description-line">
+        </div>
+        <div class="card__music">
+          <img class="card__albumcover">
+          <div class="card__music-info">
+            <div class="card__music-name">
+            </div>
+            <div class="card__timelineblock">
+              <div class="card__timeline-container">
+                <div class="card__timeline"></div>
+                <div class="card__timeregulator"></div>
+              </div>
+              <div class="card__music-time card__music-length">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card__player">
+          <div class="card__player-buttons-container">
+            <img src="./images/Prev.svg" class="card__player-button card__player-button_left">
+            <img src="./images/Prev.svg" class="card__player-button card__player-button_right">
+          </div>
+          <div class="card__timelineblock">
+            <div class="card__timeline-container">
+              <div class="card__timeline"></div>
+              <div class="card__timeregulator"></div>
+            </div>
+            <div class="card__music-time card__music-volume">
+            </div>
+          </div>
+        </div>
+      </div>
+      <img src="./images/cross.svg" class="card__hovered-icon card__hovered-icon_close">
+      <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
+    </div>
+  </div>
+</template>
+<template id="average-card-buttons">
+  <div class="card card_average card_info card_buttons">
+    <div class="card__container">
+      <div>
+        <div class="card__title-line">
+          <img class="card__icon" />
+          <div class="card__title"></div>
+        </div>
+        <div class="card__subtitle-line">
+          <div class="card__source"></div>
+          <div class="card__time"></div>
+        </div>
+      </div>
+      <div>
+        <div class="card__description-line">
+        </div>
+        <div class="card__buttons-line">
+          <a class="card__button card__button_yes"></a>
+          <a class="card__button card__button_no"></a>
+        </div>
+      </div>
+      <img src="./images/cross.svg" class="card__hovered-icon card__hovered-icon_close">
+      <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
+    </div>
+  </div>
+</template>
+<template id="small-card-normal">
+  <div class="card card_small card_info">
+    <div class="card__container">
+      <div>
+        <div class="card__title-line">
+          <img class="card__icon" />
+          <div class="card__title"></div>
+        </div>
+        <div class="card__subtitle-line">
+          <div class="card__source"></div>
+          <div class="card__time"></div>
+        </div>
+      </div>
+      <div class="card__description-line">
+      </div>
+      <img src="./images/cross.svg" class="card__hovered-icon card__hovered-icon_close">
+      <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
+    </div>
+  </div>
 </template>
 <template id="large-card-normal">
-    <div class="card card_large card_info">
-        <div class="card__container">
-          <div>
-          <div class="card__title-line">
-            <img class="card__icon" />
-            <div class="card__title"></div>
-          </div>
-          <div class="card__subtitle-line">
-            <div class="card__source"></div>
-            <div class="card__time"></div>
-          </div>
+  <div class="card card_large card_info">
+    <div class="card__container">
+      <div>
+        <div class="card__title-line">
+          <img class="card__icon" />
+          <div class="card__title"></div>
         </div>
-          <div class="card__description-line">
-          </div>
-          <img src="./images/Richdata.svg" class="card__picture-line" />
-          <img src="./images/cross.svg" class="card__hovered-icon card__hovered-icon_close">
-          <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
+        <div class="card__subtitle-line">
+          <div class="card__source"></div>
+          <div class="card__time"></div>
         </div>
       </div>
+      <div class="card__description-line">
+      </div>
+      <img src="./images/Richdata.svg" class="card__picture-line" />
+      <img src="./images/cross.svg" class="card__hovered-icon card__hovered-icon_close">
+      <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
+    </div>
+  </div>
 </template>
 
-<template id="large-card-critical">          
+<template id="large-card-critical">
   <div class="card card_large card_critical card_type1">
     <div class="card__container">
       <div class="card__critical-block">
@@ -229,13 +230,14 @@
         <div class="card__description-line">
         </div>
         <div touch-action=“none” class="card__image-container">
-            <img src="./images/Richdata Graph Alternative.png" class="card__picture-line card__picture-line-zoom" />
+          <img src="./images/Richdata Graph Alternative.png" class="card__picture-line card__picture-line-zoom" />
+          <div class="card__scrollbar"></div>
         </div>
         <img src="./images/cross-white.svg" class="card__hovered-icon card__hovered-icon_close">
         <img src="./images/Next.svg" class="card__hovered-icon  card_next-icon_next">
         <div class="card__onlitouch-line">
-          <div class="card__zoom"><span>Приближение:</span><span class="card__zoom-value"></span></div>
-          <div class="card__light"><span>Яркость:</span> <span class="card__light-value"></span></div>
+          <div class="card__zoom"><span>Приближение:</span><span class="card__zoom-value">100%</span></div>
+          <div class="card__light"><span>Яркость:</span> <span class="card__light-value">100%</span></div>
         </div>
       </div>
     </div>
@@ -243,6 +245,7 @@
 </template>
 <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
 <script src="./js/events.js"></script>
+<script src="./js/imageWithGestures.js"></script>
 <script src="./js/main.js"></script>
 
 </html>
