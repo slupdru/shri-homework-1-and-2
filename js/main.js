@@ -65,7 +65,10 @@ function setAttr(el, data, attr) {
   const elem = $(`.card__${attr}`, el);
   elem.innerHTML = data[attr];
 }
-
+/**
+ * Получаем пути для адаптивных изображений
+ * @param {string} src 
+ */
 function getImageData (src) {
   const dotPosition = src.indexOf('.');
   const name = src.slice(0, dotPosition);
@@ -79,6 +82,12 @@ function getImageData (src) {
     sizes
   }
 }
+
+/**
+ * Устанавливает пути для изображения 
+ * @param {window.HTMLElement} el
+ * @param {object} data
+ */
 function setImage(el, data){
   const imageEl = $('.card__picture-line', el);
   const src = `images/${data.data.image}`;
