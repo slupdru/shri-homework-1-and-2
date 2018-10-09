@@ -1,5 +1,4 @@
 /* global $, isTouchDevice, getComputedStyle */
-/* exported ImageWithGestures */
 const MIN_ROTATE_ANGLE = 0.2;
 const MIN_SCALE_DISTANСE = 30;
 
