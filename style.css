@@ -92,10 +92,12 @@ body {
 }
 
 .card__subtitle-line {
+  margin-bottom: 25px;
   display: flex;
   justify-content: space-between;
 }
 .card__title-line {
+  margin-bottom: 14px;
   display: grid;
   align-items: center;
   grid-template-columns: 52px 1fr;
@@ -103,9 +105,15 @@ body {
   font-size: 24px;
   font-weight: bold;
 }
+.card_next-icon_next {
+  bottom: 20px;
+}
 .card_critical .card_next-icon_next {
   box-shadow: inset 0 0px 100px 0 #fafafa;
   border-radius: 5px;
+}
+.card__hovered-icon_close {
+  top: 20px;
 }
 .card_info .card__hovered-icon_close {
   box-shadow: inset 0 0px 100px 0 #fafafa;
@@ -116,6 +124,13 @@ body {
   right: 20px;
   display: none;
   cursor: pointer;
+}
+.card__white-block {
+  margin: -1px;
+  padding: 20px;
+  border-radius: 20px;
+  color: #333333;
+  background: #fafafa;
 }
 .card:not(.card_mobile):hover .card__hovered-icon {
   display: block;
@@ -135,15 +150,6 @@ body {
   display: none;
 }
 
-.card__hovered-icon_close {
-  top: 20px;
-}
-.card_next-icon_next {
-  bottom: 20px;
-}
-.card__title-line {
-  margin-bottom: 14px;
-}
 .card_music .card__title-line {
   margin-bottom: 18px;
 }
@@ -153,9 +159,6 @@ body {
 }
 .card_type1 .card__temperature + .card__temperature {
   margin-left: 52px;
-}
-.card__subtitle-line {
-  margin-bottom: 25px;
 }
 .card__description-line {
   font-size: 20px;
@@ -193,13 +196,6 @@ body {
 .card__critical-block {
   padding: 20px 20px 0 20px;
 }
-.card__white-block {
-  padding: 20px;
-  border-radius: 20px;
-  color: #333333;
-
-  background: #fafafa;
-}
 .card.card_average.card_critical .card__description-line {
   margin-bottom: 0;
 }
@@ -214,6 +210,7 @@ body {
   flex-grow: 1;
 }
 .card__timeline-container {
+  position: relative;
   flex-grow: 1;
   margin-right: 16px;
 }
@@ -239,9 +236,6 @@ body {
   transform: translateY(-50%);
   background: #d8d8d8;
   border-radius: 4.5px;
-}
-.card__timeline-container {
-  position: relative;
 }
 .card__player {
   display: flex;
@@ -305,9 +299,6 @@ body {
   flex-direction: column;
   margin-bottom: 0;
 }
-.card__white-block {
-  margin: -1px;
-}
 .footer {
   font-size: 12px;
   color: #858585;
@@ -324,7 +315,6 @@ body {
   position: relative;
 }
 .card__onlitouch-line {
-  display: flex;
   justify-content: space-between;
   font-size: 12px;
   display: none;
@@ -359,11 +349,11 @@ body {
   .card__title-line {
     font-size: calc((100vw - 375px) / (1370 - 375) * (24 - 14) + 14px);
   }
-  .card_large .card__description-line {
-    font-size: calc((100vw - 375px) / (1370 - 375) * (24 - 18) + 18px);
-  }
   .card__description-line {
     font-size: calc((100vw - 375px) / (1370 - 375) * (20 - 18) + 18px);
+  }
+  .card_large .card__description-line {
+    font-size: calc((100vw - 375px) / (1370 - 375) * (24 - 18) + 18px);
   }
   .card__subtitle-line {
     font-size: calc((100vw - 375px) / (1370 - 375) * (18 - 12) + 12px);
@@ -434,9 +424,6 @@ body {
     padding: 0 20px 0 20px;
   }
   .card_large .card__title-line {
-    margin-bottom: 16px;
-  }
-  .card_large .card__subtitle-line {
     margin-bottom: 16px;
   }
   .card_large .card__subtitle-line {

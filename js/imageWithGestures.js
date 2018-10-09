@@ -1,14 +1,23 @@
+/* global $, isTouchDevice, getComputedStyle */
+/* exported ImageWithGestures */
 const MIN_ROTATE_ANGLE = 0.2;
 const MIN_SCALE_DISTANСE = 30;
 
+/**
+ * class управления жестами на картинке
+ */
 class ImageWithGestures {
+  /**
+   *
+   * @param {window.HTMLElement} cardWithImage
+   */
   constructor(cardWithImage) {
     this.loger = $('.card__description-line', cardWithImage);
     this.infoLine = $('.card__onlitouch-line', cardWithImage);
     this.zoomEl = $('.card__zoom-value', cardWithImage);
     this.lightEl = $('.card__light-value', cardWithImage);
     this.scrollbar = $('.card__scrollbar', cardWithImage);
-    this.mobile = is_touch_device();
+    this.mobile = isTouchDevice();
     this.imageContainer = $('.card__image-container', cardWithImage);
     this.image = $('.card__picture-line-zoom', cardWithImage);
     this.prevX = 0;
@@ -28,6 +37,7 @@ class ImageWithGestures {
    * Устанавливает значение transform translate в случае жеста одним пальцем
    * @param {number} limit - максимальное значение translate
    * @param {number} size - размер контейнера изображения
+   * @returns {void}
    */
   updateTranslate(limit, size) {
     this.image.style.transform = `scale(${this.scale}) translateX(${this.x}px)`;
@@ -35,6 +45,7 @@ class ImageWithGestures {
   }
   /**
    * Обновляет значение transform scale
+   * @returns {void}
    */
   updateScale() {
     this.image.style.transform = `scale(${this.scale}) translateX(${this.x}px)`;
@@ -43,6 +54,7 @@ class ImageWithGestures {
   }
   /**
    * Обновляет значение яркости
+   * @returns {void}
    */
   updateBrightness() {
     this.image.style.filter = `brightness(${this.brightness})`;
@@ -51,6 +63,7 @@ class ImageWithGestures {
   /**
    * Добавляет событие в кеш
    * @param {window.event} ev
+   * @returns {void}
    */
   onPoinerDown(ev) {
     this.eventsCash.push(ev);
@@ -59,10 +72,11 @@ class ImageWithGestures {
   /**
    *
    * @param {window.event} ev
+   * @returns {void}
    */
   onPointerMove(ev) {
     // Обновляем кэш если событие уже было в нем
-    for (var i = 0; i < this.eventsCash.length; i++) {
+    for (let i = 0; i < this.eventsCash.length; i++) {
       if (ev.pointerId == this.eventsCash[i].pointerId) {
         this.eventsCash[i] = ev;
         break;
@@ -77,22 +91,22 @@ class ImageWithGestures {
         this.coords = {
           center: {
             clientX: (touchPointA.clientX + touchPointB.clientX) / 2,
-            clientY: (touchPointA.clientY + touchPointB.clientY) / 2
+            clientY: (touchPointA.clientY + touchPointB.clientY) / 2,
           },
           first: {
             clientX: touchPointA.clientX,
-            clientY: touchPointA.clientY
+            clientY: touchPointA.clientY,
           },
           second: {
             clientX: touchPointB.clientX,
-            clientY: touchPointB.clientY
-          }
+            clientY: touchPointB.clientY,
+          },
         };
       }
-
-      // находим текущее расстояние между двумя точками
+      // находим текущее расстояние между двумя точками
       const curDiff = Math.sqrt(
-        Math.pow(touchPointA.clientX - touchPointB.clientX, 2) + Math.pow(touchPointA.clientY - touchPointB.clientY, 2)
+          Math.pow(touchPointA.clientX - touchPointB.clientX, 2) +
+          Math.pow(touchPointA.clientY - touchPointB.clientY, 2)
       );
 
       // находим текущий угл относительно изначального положения пальцев
@@ -101,10 +115,13 @@ class ImageWithGestures {
       // находим среднее изменение угла
       const curAngle = (angleA + angleB) / 2;
 
-      // если изменение обоих углов больше 0.2 то определяем тип текущего жеста как изменение яркости, если расстояние между пальцами изменилось на 30, то определяем жест как scale
-      if (Math.abs(angleA) > MIN_ROTATE_ANGLE && Math.abs(angleB) > MIN_ROTATE_ANGLE && !this.type)
+      /*
+     если изменение обоих углов больше 0.2 то определяем тип текущего жеста как изменение яркости,
+     если расстояние между пальцами изменилось на 30, то определяем жест как scale
+     */
+      if (Math.abs(angleA) > MIN_ROTATE_ANGLE && Math.abs(angleB) > MIN_ROTATE_ANGLE && !this.type) {
         this.type = 'brightness';
-      else if (Math.abs(this.scaleCounter) > MIN_SCALE_DISTANСE && !this.type) {
+      } else if (Math.abs(this.scaleCounter) > MIN_SCALE_DISTANСE && !this.type) {
         this.type = 'scale';
       }
 
@@ -148,9 +165,14 @@ class ImageWithGestures {
       this.prevX = cur;
     }
   }
+  /**
+   *
+   * @param {window.event} ev
+   * @returns {void}
+   */
   onPointerUp(ev) {
     // удаляем событие из кеша
-    this.remove_event(ev);
+    this.removeEvent(ev);
     // если касаний меньше двух, обнуляем значения
     if (this.eventsCash.length < 2) {
       this.prevDiff = -1;
@@ -166,9 +188,10 @@ class ImageWithGestures {
   /**
    *
    * @param {window.event} ev
+   * @returns {void}
    */
-  remove_event(ev) {
-    for (var i = 0; i < this.eventsCash.length; i++) {
+  removeEvent(ev) {
+    for (let i = 0; i < this.eventsCash.length; i++) {
       if (this.eventsCash[i].pointerId == ev.pointerId) {
         this.eventsCash.splice(i, 1);
         break;
@@ -180,21 +203,23 @@ class ImageWithGestures {
    * @param {object} center
    * @param {object} point1
    * @param {object} point2
+   * @returns {object}
    */
   findAngle(center, point1, point2) {
     const OA = {
       x: point1.clientX - center.clientX,
-      y: point1.clientY - center.clientY
+      y: point1.clientY - center.clientY,
     };
     const OB = {
       x: point2.clientX - center.clientX,
-      y: point2.clientY - center.clientY
+      y: point2.clientY - center.clientY,
     };
     const angle = Math.atan2(OA.x * OB.y - OA.y * OB.x, OA.x * OB.x + OA.y * OB.y);
     return angle;
   }
   /**
    * инициируем листнеры
+   * @returns {void}
    */
   init() {
     if (this.mobile) this.infoLine.style.display = 'flex';

@@ -1,0 +1,30 @@
+{
+  "name": "homework-1-2",
+  "version": "1.0.0",
+  "description": "homework-1-2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:script": "eslint .",
+    "lint:style": "stylelint ./style.css",
+    "lint": "npm run lint:script && npm run lint:style"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slupdru/shri-homework-1-and-2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slupdru/shri-homework-1-and-2/issues"
+  },
+  "homepage": "https://github.com/slupdru/shri-homework-1-and-2#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.6.1",
+    "eslint-config-google": "^0.10.0",
+    "stylelint": "^9.6.0",
+    "stylelint-config-recommended": "^2.1.0"
+  }
+}

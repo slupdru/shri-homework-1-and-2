@@ -1,13 +1,17 @@
+/* global ImageWithGestures, getComputedStyle*/
+/* global data */
 /**
  *
  * @param {string} selector
  * @param {window.HTMLElement} target
+ * @returns {window.HTMLElement}
  */
 const $ = (selector, target) => (target || document).querySelector(selector);
 /**
  *
  * @param {string} selector
  * @param {window.HTMLElement} target
+ * @returns {Array.<HTMLElement>}
  */
 const $$ = (selector, target) => (target || document).querySelectorAll(selector) || [];
 
@@ -40,11 +44,15 @@ for (let cardWithPhoto of cardsWithPhoto) {
   new ImageWithGestures(cardWithPhoto);
 }
 // Если устройство поддерживает тач, убираем ховер с карточек
-if (is_touch_device()) {
+if (isTouchDevice()) {
   setMobileClasses();
 }
 
-// Определяю тип карточки исходя из входных данных
+/**
+ * Определяю тип карточки исходя из входных данных
+ * @param {object} el
+ * @returns {string}
+ */
 function findType(el) {
   if (el.size === 's') return 'small-card-normal';
   if (el.data && el.data.temperature) return 'average-card-temperature';
@@ -60,6 +68,7 @@ function findType(el) {
  * @param {window.HTMLElement} el
  * @param {object} data
  * @param {string} attr
+ * @returns {void}
  */
 function setAttr(el, data, attr) {
   const elem = $(`.card__${attr}`, el);
@@ -67,28 +76,30 @@ function setAttr(el, data, attr) {
 }
 /**
  * Получаем пути для адаптивных изображений
- * @param {string} src 
+ * @param {string} src
+ * @returns {object}
  */
-function getImageData (src) {
+function getImageData(src) {
   const dotPosition = src.indexOf('.');
   const name = src.slice(0, dotPosition);
-  const extension = src.slice(dotPosition) ;
+  const extension = src.slice(dotPosition);
 
   const srcset = `${name}${extension} 320w, ${name}2x${extension} 480w, ${name}3x${extension} 800w`;
   const sizes = '(max-width: 320px) 280px, (max-width: 480px) 440px, 800px';
 
   return {
     srcset,
-    sizes
-  }
+    sizes,
+  };
 }
 
 /**
- * Устанавливает пути для изображения 
+ * Устанавливает пути для изображения
  * @param {window.HTMLElement} el
  * @param {object} data
+ * @returns {void}
  */
-function setImage(el, data){
+function setImage(el, data) {
   const imageEl = $('.card__picture-line', el);
   const src = `images/${data.data.image}`;
   const imageData = getImageData(src);
@@ -100,6 +111,7 @@ function setImage(el, data){
  * Устанавливает описание выбранного поля
  * @param {window.HTMLElement} el
  * @param {object} data
+ * @returns {void}
  */
 function setDescription(el, data) {
   const desc = $('.card__description-line', el);
@@ -111,6 +123,7 @@ function setDescription(el, data) {
  * Устанавливает температуру и влажность
  * @param {window.HTMLElement} el
  * @param {object} data
+ * @returns {void}
  */
 function setTemperatureAndHumidity(el, data) {
   const tempEl = $('.card__temperature-inner', el);
@@ -123,6 +136,7 @@ function setTemperatureAndHumidity(el, data) {
  * Устанавливает значение кнопок
  * @param {window.HTMLElement} el
  * @param {object} data
+ * @returns {void}
  */
 function setButtons(el, data) {
   const buttonYes = $('.card__button_yes', el);
@@ -135,6 +149,7 @@ function setButtons(el, data) {
  * Устанавливает значение пути для иконок
  * @param {window.HTMLElement} el
  * @param {object} data
+ *  @returns {void}
  */
 function setIcon(el, data) {
   const iconEl = $('.card__icon', el);
@@ -145,6 +160,7 @@ function setIcon(el, data) {
  * Устанавливает поля карточки с музыкальным плеером
  * @param {window.HTMLElement} el
  * @param {object} data
+ * @returns {void}
  */
 function setMusic(el, data) {
   const coverEl = $('.card__albumcover', el);
@@ -160,6 +176,7 @@ function setMusic(el, data) {
 /**
  * Создает клон выбранного шаблона
  * @param {string} template
+ * @returns {window.HTMLElement}
  */
 function makeClone(template) {
   const fragment = $(`#${template}`).content;
@@ -170,14 +187,17 @@ function makeClone(template) {
 /**
  * Проверяет высоту загололовка, если она больше 2 строк возвращает false
  * @param {window.HTMLElement} element
+ * @returns {boolean}
  */
 function checkHeight(element) {
   const styles = getComputedStyle(element);
   if (Math.ceil(parseFloat(styles.fontSize)) * 1.2 * 2 < element.offsetHeight) return false;
   else return true;
 }
+
 /**
  * Проеряет заголовки на высоту, обрезает и ставит три точки, если заголовок больше 2 строк
+ * @returns {void}
  */
 function checkTitles() {
   const titles = $$('.card__title');
@@ -192,6 +212,7 @@ function checkTitles() {
 }
 /**
  * Устанавливает класс всем карточкам, чтобы убрать действие hover
+ * @returns {void}
  */
 function setMobileClasses() {
   const cards = $$('.card');
@@ -202,7 +223,8 @@ function setMobileClasses() {
 
 /**
  * Проверяет, есть ли тач у устройства
+ * @returns {void}
  */
-function is_touch_device() {
+function isTouchDevice() {
   return !!('ontouchstart' in window);
 }
