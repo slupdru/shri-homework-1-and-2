@@ -1,19 +1,9 @@
-/* global ImageWithGestures, getComputedStyle*/
-/* global data */
-/**
- *
- * @param {string} selector
- * @param {window.HTMLElement} target
- * @returns {window.HTMLElement}
- */
-const $ = (selector, target) => (target || document).querySelector(selector);
-/**
- *
- * @param {string} selector
- * @param {window.HTMLElement} target
- * @returns {Array.<HTMLElement>}
- */
-const $$ = (selector, target) => (target || document).querySelectorAll(selector) || [];
+import 'pepjs';
+import '@/styles/style.scss';
+import data from './events';
+import ImageWithGestures from './imageWithGestures';
+import {$, $$} from './helpers/dom';
+import isTouchDevice from './helpers/isTouchDevice';
 
 // Главный контейнер для карточек
 const parent = $('.cards-container');
@@ -221,10 +211,4 @@ function setMobileClasses() {
   }
 }
 
-/**
- * Проверяет, есть ли тач у устройства
- * @returns {void}
- */
-function isTouchDevice() {
-  return !!('ontouchstart' in window);
-}
+

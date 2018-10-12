@@ -1,11 +1,11 @@
-/* global $, isTouchDevice, getComputedStyle */
 const MIN_ROTATE_ANGLE = 0.2;
 const MIN_SCALE_DISTANСE = 30;
-
+import {$} from './helpers/dom';
+import isTouchDevice from './helpers/isTouchDevice';
 /**
  * class управления жестами на картинке
  */
-class ImageWithGestures {
+export default class ImageWithGestures {
   /**
    *
    * @param {window.HTMLElement} cardWithImage
