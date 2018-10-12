@@ -151,7 +151,7 @@ class ImageWithGestures {
     // если одно касание, обрабатываем жест перемещения
     if (this.eventsCash.length == 1) {
       const touchPointA = this.eventsCash[0];
-      const cur = touchPointA.offsetX;
+      const cur = touchPointA.clientX;
       const styles = getComputedStyle(this.image);
       const width = parseFloat(styles.width, 10);
       const value = this.x + cur - this.prevX;
