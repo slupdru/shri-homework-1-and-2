@@ -1,5 +1,6 @@
 import 'pepjs';
-import '@/styles/style.scss';
+import '@/styles/main.scss';
+import '@/styles/allPages.scss';
 import data from './events';
 import ImageWithGestures from './imageWithGestures';
 import {$, $$} from './helpers/dom';

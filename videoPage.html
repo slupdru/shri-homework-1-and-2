@@ -8,8 +8,7 @@
   <meta name="robots" content="noindex">
   <title>Video surveillance</title>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <link rel="stylesheet" href="css/allPages.css">
-  <link rel="stylesheet" href="css/video.css">
+  <link rel="stylesheet" href="styles/video.css">
 </head>
 
 <body>
@@ -43,7 +42,9 @@
           <canvas id="main_canvas">
 
             </canvas>
-            <input type="range" name="points" min="0" max="100s">
+            <label for="volume">Britness</label>
+            <input type="range" id="start" name="volume"
+                   min="-100" max="100" />
       </div>
     </div>
   </main>
