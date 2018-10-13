@@ -40,17 +40,19 @@ initVideo(
     'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fhall%2Fmaster.m3u8'
 );
 
-console.log('video js work');
 
-var canvas = document.querySelector('#main_canvas');
-
-var ctx    = canvas.getContext('2d');
-var video  = document.getElementById('video-1');
+const canvas = document.querySelector('#main_canvas');
+const brainessRange = document.querySelector('#BritnessRange');
+brainessRange.addEventListener('change', () => {
+  console.log(brainessRange.value, "value");
+});
+const ctx    = canvas.getContext('2d');
+const video  = document.getElementById('video-1');
 const styles = getComputedStyle(video);
 console.log(styles.height,"style");
 video.addEventListener('play', function () {
 
-  var $this = this; //cache
+  const $this = this; //cache
   (function loop() {
     canvas.height = video.videoHeight;
     canvas.width = video.videoWidth;
