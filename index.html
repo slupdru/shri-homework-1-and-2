@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="robots" content="noindex">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="dist/bundle.css">
   <title>Document</title>
 </head>
 
@@ -229,8 +229,9 @@
       <div class="card__white-block">
         <div class="card__description-line">
         </div>
-        <div touch-action=“none” class="card__image-container">
-          <img src="./images/Richdata Graph Alternative.png" class="card__picture-line card__picture-line-zoom" />
+        <div touch-action="none" class="card__image-container">
+          <canvas id="canvas_image"></canvas>
+          <img src="./images/bitmap.png" class="card__picture-line card__picture-line-zoom" />
           <div class="card__scrollbar"></div>
         </div>
         <img src="./images/cross-white.svg" class="card__hovered-icon card__hovered-icon_close">
@@ -243,9 +244,6 @@
     </div>
   </div>
 </template>
-<script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
-<script src="js/events.js"></script>
-<script src="js/imageWithGestures.js"></script>
-<script src="js/main.js"></script>
+<script src="dist/bundle.js"></script>
 
 </html>

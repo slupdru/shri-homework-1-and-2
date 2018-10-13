@@ -1,4 +1,4 @@
-let data = {
+export default  {
   'events': [
     {
       'type': 'info',
