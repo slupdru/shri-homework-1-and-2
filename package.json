@@ -9,7 +9,7 @@
     "serve": "npm run clear && NODE_ENV=development webpack --progress --hide-modules",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint:script": "eslint .",
-    "lint:style": "stylelint ./style.css",
+    "lint:style": "stylelint ./styles",
     "lint": "npm run lint:script && npm run lint:style"
   },
   "repository": {

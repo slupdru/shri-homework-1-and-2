@@ -389,13 +389,17 @@ body {
 .card__picture-line {
   width: 100%; }
 
-.card__picture-line-zoom {
+#canvas_image {
   -ms-touch-action: none;
       touch-action: none;
   pointer-events: none;
-  -webkit-transform: scale(2);
-      -ms-transform: scale(2);
-          transform: scale(2);
+  width: 100%; }
+
+.card__picture-line-zoom {
+  display: none;
+  -ms-touch-action: none;
+      touch-action: none;
+  pointer-events: none;
   -webkit-transform-origin: left top;
       -ms-transform-origin: left top;
           transform-origin: left top; }
@@ -405,7 +409,7 @@ body {
   position: absolute;
   height: 3px;
   border-radius: 5px;
-  bottom: 1px;
+  bottom: 7px;
   background-color: #fff;
   z-index: 5; }
 

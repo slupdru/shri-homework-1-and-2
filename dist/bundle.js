@@ -166,7 +166,8 @@ try {
     if (type === 'average-card-buttons') setButtons(element, elementData);
     if (type === 'average-card-music') setMusic(element, elementData);
     if (type === 'average-card-temperature') setTemperatureAndHumidity(element, elementData);
-    if (type === 'large-card-critical') setImage(element, elementData);
+    // Убрал из-за трудностей вопределении оргинального размера для 2 задания
+    // if (type === 'large-card-critical') setImage(element, elementData);
     parent.appendChild(element);
   }
 } catch (err) {
@@ -2069,7 +2070,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var MIN_ROTATE_ANGLE = 0.2;
+var MIN_ROTATE_ANGLE = 0.6;
 var MIN_SCALE_DISTANСE = 30;
 
 /**
@@ -2083,11 +2084,12 @@ var ImageWithGestures = function () {
   function ImageWithGestures(cardWithImage) {
     _classCallCheck(this, ImageWithGestures);
 
-    this.loger = (0, _dom.$)('.card__description-line', cardWithImage);
     this.infoLine = (0, _dom.$)('.card__onlitouch-line', cardWithImage);
     this.zoomEl = (0, _dom.$)('.card__zoom-value', cardWithImage);
     this.lightEl = (0, _dom.$)('.card__light-value', cardWithImage);
     this.scrollbar = (0, _dom.$)('.card__scrollbar', cardWithImage);
+    this.canvas = (0, _dom.$)('#canvas_image', cardWithImage);
+    this.ctx = this.canvas.getContext('2d');
     this.mobile = (0, _isTouchDevice2.default)();
     this.imageContainer = (0, _dom.$)('.card__image-container', cardWithImage);
     this.image = (0, _dom.$)('.card__picture-line-zoom', cardWithImage);
@@ -2101,22 +2103,35 @@ var ImageWithGestures = function () {
     this.eventsCash = [];
     this.prevDiff = -1;
     this.prevAngle = -1;
+    this.limit = 0;
+    this.width = 0;
     this.x = 0;
     this.init();
   }
   /**
-   * Устанавливает значение transform translate в случае жеста одним пальцем
-   * @param {number} limit - максимальное значение translate
-   * @param {number} size - размер контейнера изображения
+   * Функция обновляет значение скроллбара
    * @returns {void}
    */
 
 
   _createClass(ImageWithGestures, [{
+    key: 'updateScrollBar',
+    value: function updateScrollBar() {
+      this.scrollbar.style.transform = 'translateX(' + this.x / this.limit * (this.width - this.width / this.scale) + 'px)';
+      this.scrollbar.style.width = 100 / this.scale + '%';
+    }
+    /**
+     * Устанавливает значение transform translate в случае жеста одним пальцем
+     * @param {number} limit - максимальное значение translate
+     * @param {number} size - размер контейнера изображения
+     * @returns {void}
+     */
+
+  }, {
     key: 'updateTranslate',
-    value: function updateTranslate(limit, size) {
-      this.image.style.transform = 'scale(' + this.scale + ') translateX(' + this.x + 'px)';
-      this.scrollbar.style.transform = 'translateX(' + this.x / limit * (parseFloat(size) - size * 1 / this.scale) + 'px)';
+    value: function updateTranslate() {
+      this.ctx.drawImage(this.image, this.x * this.scale, 0);
+      this.updateScrollBar();
     }
     /**
      * Обновляет значение transform scale
@@ -2126,8 +2141,15 @@ var ImageWithGestures = function () {
   }, {
     key: 'updateScale',
     value: function updateScale() {
-      this.image.style.transform = 'scale(' + this.scale + ') translateX(' + this.x + 'px)';
-      this.scrollbar.style.width = 100 / this.scale + '%';
+      this.limit = (this.image.naturalWidth / this.scale - this.image.naturalWidth) / this.scale;
+      this.canvas.width = this.image.naturalWidth * 1 / this.scale;
+      this.canvas.height = this.image.naturalHeight * 1 / this.scale;
+      if (this.x < this.limit) {
+        this.x = this.limit;
+      }
+      this.ctx.drawImage(this.image, this.x * this.scale, 0);
+
+      this.updateScrollBar();
       if (this.mobile) this.zoomEl.innerHTML = Math.round(this.scale * 100) + '%';
     }
     /**
@@ -2138,7 +2160,7 @@ var ImageWithGestures = function () {
   }, {
     key: 'updateBrightness',
     value: function updateBrightness() {
-      this.image.style.filter = 'brightness(' + this.brightness + ')';
+      this.canvas.style.filter = 'brightness(' + this.brightness + ')';
       if (this.mobile) this.lightEl.innerHTML = Math.round(this.brightness * 100) + '%';
     }
     /**
@@ -2150,6 +2172,7 @@ var ImageWithGestures = function () {
   }, {
     key: 'onPoinerDown',
     value: function onPoinerDown(ev) {
+      this.imageContainer.setPointerCapture(ev.pointerId);
       this.eventsCash.push(ev);
     }
 
@@ -2194,8 +2217,8 @@ var ImageWithGestures = function () {
         var curDiff = Math.sqrt(Math.pow(touchPointA.clientX - touchPointB.clientX, 2) + Math.pow(touchPointA.clientY - touchPointB.clientY, 2));
 
         // находим текущий угл относительно изначального положения пальцев
-        var angleA = this.findAngle(this.coords.center, this.coords.first, touchPointA);
-        var angleB = this.findAngle(this.coords.center, this.coords.second, touchPointB);
+        var angleA = findAngle(this.coords.center, this.coords.first, touchPointA);
+        var angleB = findAngle(this.coords.center, this.coords.second, touchPointB);
         // находим среднее изменение угла
         var curAngle = (angleA + angleB) / 2;
 
@@ -2203,7 +2226,7 @@ var ImageWithGestures = function () {
         если изменение обоих углов больше 0.2 то определяем тип текущего жеста как изменение яркости,
         если расстояние между пальцами изменилось на 30, то определяем жест как scale
         */
-        if (Math.abs(angleA) > MIN_ROTATE_ANGLE && Math.abs(angleB) > MIN_ROTATE_ANGLE && !this.type) {
+        if (Math.abs(angleA) > MIN_ROTATE_ANGLE || Math.abs(angleB) > MIN_ROTATE_ANGLE && !this.type) {
           this.type = 'brightness';
         } else if (Math.abs(this.scaleCounter) > MIN_SCALE_DISTANСE && !this.type) {
           this.type = 'scale';
@@ -2226,7 +2249,7 @@ var ImageWithGestures = function () {
 
         // если значение типа события определено как brightness вычисляем текущее значение
         if (this.type === 'brightness') {
-          this.brightness = this.brightness + (curAngle - this.prevAngle) / 5;
+          this.brightness = this.brightness + (curAngle - this.prevAngle) / 2.5;
           this.updateBrightness();
         }
         this.prevAngle = curAngle;
@@ -2237,14 +2260,10 @@ var ImageWithGestures = function () {
       if (this.eventsCash.length == 1) {
         var _touchPointA = this.eventsCash[0];
         var cur = _touchPointA.clientX;
-        var styles = getComputedStyle(this.image);
-        var width = parseFloat(styles.width, 10);
         var _value = this.x + cur - this.prevX;
-
-        var limit = (width - width * this.scale) / this.scale;
         if (this.prevX > 0) {
-          this.x = Math.min(Math.max(_value, limit), 0);
-          this.updateTranslate(limit, width);
+          this.x = Math.min(Math.max(_value, this.limit), 0);
+          this.updateTranslate();
         }
         this.prevX = cur;
       }
@@ -2288,28 +2307,7 @@ var ImageWithGestures = function () {
         }
       }
     }
-    /**
-     * вычисляет значение угла по 3 точкам
-     * @param {object} center
-     * @param {object} point1
-     * @param {object} point2
-     * @returns {object}
-     */
 
-  }, {
-    key: 'findAngle',
-    value: function findAngle(center, point1, point2) {
-      var OA = {
-        x: point1.clientX - center.clientX,
-        y: point1.clientY - center.clientY
-      };
-      var OB = {
-        x: point2.clientX - center.clientX,
-        y: point2.clientY - center.clientY
-      };
-      var angle = Math.atan2(OA.x * OB.y - OA.y * OB.x, OA.x * OB.x + OA.y * OB.y);
-      return angle;
-    }
     /**
      * инициируем листнеры
      * @returns {void}
@@ -2318,7 +2316,15 @@ var ImageWithGestures = function () {
   }, {
     key: 'init',
     value: function init() {
+      var _this = this;
+
       if (this.mobile) this.infoLine.style.display = 'flex';
+
+      this.image.addEventListener('load', function () {
+        var styles = getComputedStyle(_this.canvas);
+        _this.width = parseFloat(styles.width);
+        _this.updateScale();
+      });
       this.imageContainer.addEventListener('pointerdown', this.onPoinerDown.bind(this));
       this.imageContainer.addEventListener('pointerup', this.onPointerUp.bind(this));
       this.imageContainer.addEventListener('pointercancel', this.onPointerUp.bind(this));
@@ -2329,8 +2335,28 @@ var ImageWithGestures = function () {
 
   return ImageWithGestures;
 }();
+/**
+ * вычисляет значение угла по 3 точкам
+ * @param {object} center
+ * @param {object} point1
+ * @param {object} point2
+ * @returns {object}
+ */
+
 
 exports.default = ImageWithGestures;
+function findAngle(center, point1, point2) {
+  var OA = {
+    x: point1.clientX - center.clientX,
+    y: point1.clientY - center.clientY
+  };
+  var OB = {
+    x: point2.clientX - center.clientX,
+    y: point2.clientY - center.clientY
+  };
+  var angle = Math.atan2(OA.x * OB.y - OA.y * OB.x, OA.x * OB.x + OA.y * OB.y);
+  return angle;
+}
 
 /***/ })
 /******/ ]);

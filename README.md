@@ -5,7 +5,11 @@
 
 ``` bash
 # Запустить линтеры
-npm run lint
+npm run lint  
+
+# Запустить сборку webpack
+npm run build  
+
 ```
 ## Ссылка на GitHub.Pages  
 https://slupdru.github.io/shri-homework-1-and-2/

@@ -1,4 +1,4 @@
-const MIN_ROTATE_ANGLE = 0.2;
+const MIN_ROTATE_ANGLE = 0.6;
 const MIN_SCALE_DISTANСE = 30;
 import {$} from './helpers/dom';
 import isTouchDevice from './helpers/isTouchDevice';
@@ -11,11 +11,12 @@ export default class ImageWithGestures {
    * @param {window.HTMLElement} cardWithImage
    */
   constructor(cardWithImage) {
-    this.loger = $('.card__description-line', cardWithImage);
     this.infoLine = $('.card__onlitouch-line', cardWithImage);
     this.zoomEl = $('.card__zoom-value', cardWithImage);
     this.lightEl = $('.card__light-value', cardWithImage);
     this.scrollbar = $('.card__scrollbar', cardWithImage);
+    this.canvas = $('#canvas_image', cardWithImage);
+    this.ctx = this.canvas.getContext('2d');
     this.mobile = isTouchDevice();
     this.imageContainer = $('.card__image-container', cardWithImage);
     this.image = $('.card__picture-line-zoom', cardWithImage);
@@ -29,8 +30,19 @@ export default class ImageWithGestures {
     this.eventsCash = [];
     this.prevDiff = -1;
     this.prevAngle = -1;
+    this.limit = 0;
+    this.width = 0;
     this.x = 0;
     this.init();
+  }
+  /**
+   * Функция обновляет значение скроллбара
+   * @returns {void}
+   */
+  updateScrollBar() {
+      this.scrollbar.style.transform = `translateX(${(this.x / this.limit) *
+         (this.width - this.width / this.scale)}px)`;
+      this.scrollbar.style.width = `${100 / this.scale}%`;
   }
   /**
    * Устанавливает значение transform translate в случае жеста одним пальцем
@@ -38,17 +50,24 @@ export default class ImageWithGestures {
    * @param {number} size - размер контейнера изображения
    * @returns {void}
    */
-  updateTranslate(limit, size) {
-    this.image.style.transform = `scale(${this.scale}) translateX(${this.x}px)`;
-    this.scrollbar.style.transform = `translateX(${(this.x / limit) * (parseFloat(size) - (size * 1) / this.scale)}px)`;
+  updateTranslate() {
+    this.ctx.drawImage(this.image, this.x * this.scale, 0);
+   this.updateScrollBar();
   }
   /**
    * Обновляет значение transform scale
    * @returns {void}
    */
   updateScale() {
-    this.image.style.transform = `scale(${this.scale}) translateX(${this.x}px)`;
-    this.scrollbar.style.width = `${100 / this.scale}%`;
+    this.limit = (this.image.naturalWidth/this.scale - this.image.naturalWidth) / this.scale;
+    this.canvas.width = this.image.naturalWidth * 1/this.scale;
+    this.canvas.height = this.image.naturalHeight * 1/this.scale;
+    if (this.x < this.limit) {
+      this.x = this.limit;
+  }
+    this.ctx.drawImage(this.image, this.x * this.scale, 0);
+
+    this.updateScrollBar();
     if (this.mobile) this.zoomEl.innerHTML = `${Math.round(this.scale * 100)}%`;
   }
   /**
@@ -56,7 +75,7 @@ export default class ImageWithGestures {
    * @returns {void}
    */
   updateBrightness() {
-    this.image.style.filter = `brightness(${this.brightness})`;
+    this.canvas.style.filter = `brightness(${this.brightness})`;
     if (this.mobile) this.lightEl.innerHTML = `${Math.round(this.brightness * 100)}%`;
   }
   /**
@@ -65,6 +84,7 @@ export default class ImageWithGestures {
    * @returns {void}
    */
   onPoinerDown(ev) {
+    this.imageContainer.setPointerCapture(ev.pointerId);
     this.eventsCash.push(ev);
   }
 
@@ -109,8 +129,8 @@ export default class ImageWithGestures {
       );
 
       // находим текущий угл относительно изначального положения пальцев
-      const angleA = this.findAngle(this.coords.center, this.coords.first, touchPointA);
-      const angleB = this.findAngle(this.coords.center, this.coords.second, touchPointB);
+      const angleA = findAngle(this.coords.center, this.coords.first, touchPointA);
+      const angleB = findAngle(this.coords.center, this.coords.second, touchPointB);
       // находим среднее изменение угла
       const curAngle = (angleA + angleB) / 2;
 
@@ -118,7 +138,7 @@ export default class ImageWithGestures {
      если изменение обоих углов больше 0.2 то определяем тип текущего жеста как изменение яркости,
      если расстояние между пальцами изменилось на 30, то определяем жест как scale
      */
-      if (Math.abs(angleA) > MIN_ROTATE_ANGLE && Math.abs(angleB) > MIN_ROTATE_ANGLE && !this.type) {
+      if (Math.abs(angleA) > MIN_ROTATE_ANGLE || Math.abs(angleB) > MIN_ROTATE_ANGLE && !this.type) {
         this.type = 'brightness';
       } else if (Math.abs(this.scaleCounter) > MIN_SCALE_DISTANСE && !this.type) {
         this.type = 'scale';
@@ -141,7 +161,7 @@ export default class ImageWithGestures {
 
       // если значение типа события определено как brightness вычисляем текущее значение
       if (this.type === 'brightness') {
-        this.brightness = this.brightness + (curAngle - this.prevAngle) / 5;
+        this.brightness = this.brightness + (curAngle - this.prevAngle) / 2.5;
         this.updateBrightness();
       }
       this.prevAngle = curAngle;
@@ -152,14 +172,10 @@ export default class ImageWithGestures {
     if (this.eventsCash.length == 1) {
       const touchPointA = this.eventsCash[0];
       const cur = touchPointA.clientX;
-      const styles = getComputedStyle(this.image);
-      const width = parseFloat(styles.width, 10);
       const value = this.x + cur - this.prevX;
-
-      const limit = (width - width * this.scale) / this.scale;
       if (this.prevX > 0) {
-        this.x = Math.min(Math.max(value, limit), 0);
-        this.updateTranslate(limit, width);
+        this.x = Math.min(Math.max(value, this.limit), 0);
+        this.updateTranslate();
       }
       this.prevX = cur;
     }
@@ -197,6 +213,27 @@ export default class ImageWithGestures {
       }
     }
   }
+
+
+  /**
+   * инициируем листнеры
+   * @returns {void}
+   */
+  init() {
+    if (this.mobile) this.infoLine.style.display = 'flex';
+
+    this.image.addEventListener('load', ()=>{
+      const styles = getComputedStyle(this.canvas);
+      this.width = parseFloat(styles.width);
+      this.updateScale();
+    });
+    this.imageContainer.addEventListener('pointerdown', this.onPoinerDown.bind(this));
+    this.imageContainer.addEventListener('pointerup', this.onPointerUp.bind(this));
+    this.imageContainer.addEventListener('pointercancel', this.onPointerUp.bind(this));
+    this.imageContainer.addEventListener('pointerleave', this.onPointerUp.bind(this));
+    this.imageContainer.addEventListener('pointermove', this.onPointerMove.bind(this));
+  }
+}
   /**
    * вычисляет значение угла по 3 точкам
    * @param {object} center
@@ -204,28 +241,15 @@ export default class ImageWithGestures {
    * @param {object} point2
    * @returns {object}
    */
-  findAngle(center, point1, point2) {
-    const OA = {
-      x: point1.clientX - center.clientX,
-      y: point1.clientY - center.clientY,
-    };
-    const OB = {
-      x: point2.clientX - center.clientX,
-      y: point2.clientY - center.clientY,
-    };
-    const angle = Math.atan2(OA.x * OB.y - OA.y * OB.x, OA.x * OB.x + OA.y * OB.y);
-    return angle;
-  }
-  /**
-   * инициируем листнеры
-   * @returns {void}
-   */
-  init() {
-    if (this.mobile) this.infoLine.style.display = 'flex';
-    this.imageContainer.addEventListener('pointerdown', this.onPoinerDown.bind(this));
-    this.imageContainer.addEventListener('pointerup', this.onPointerUp.bind(this));
-    this.imageContainer.addEventListener('pointercancel', this.onPointerUp.bind(this));
-    this.imageContainer.addEventListener('pointerleave', this.onPointerUp.bind(this));
-    this.imageContainer.addEventListener('pointermove', this.onPointerMove.bind(this));
-  }
+function findAngle(center, point1, point2) {
+  const OA = {
+    x: point1.clientX - center.clientX,
+    y: point1.clientY - center.clientY,
+  };
+  const OB = {
+    x: point2.clientX - center.clientX,
+    y: point2.clientY - center.clientY,
+  };
+  const angle = Math.atan2(OA.x * OB.y - OA.y * OB.x, OA.x * OB.x + OA.y * OB.y);
+  return angle;
 }

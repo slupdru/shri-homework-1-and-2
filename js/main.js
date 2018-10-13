@@ -22,7 +22,8 @@ for (let elementData of data.events) {
   if (type === 'average-card-buttons') setButtons(element, elementData);
   if (type === 'average-card-music') setMusic(element, elementData);
   if (type === 'average-card-temperature') setTemperatureAndHumidity(element, elementData);
-  if (type === 'large-card-critical') setImage(element, elementData);
+  // Убрал из-за трудностей вопределении оргинального размера для 2 задания
+  // if (type === 'large-card-critical') setImage(element, elementData);
   parent.appendChild(element);
 }
 
