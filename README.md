@@ -4,12 +4,16 @@
 В imageWithGestures находится управление жестами для 2 задания  
 
 ``` bash
-#  
-#  Для запустить линтеров
-npm run lint  
+#  Заруск сервера
+cd server  
+npm start  
 
 # Запустить сборку webpack
+cd client  
 npm run build  
+
+#  Запустить линтеры
+npm run lint  
 
 ```
 ## Ссылка на GitHub.Pages  
