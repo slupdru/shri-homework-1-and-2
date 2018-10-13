@@ -1,43 +1,83 @@
 import 'pepjs';
 import '@/styles/style.scss';
-import data from './events';
+// import data from './events';
 import ImageWithGestures from './imageWithGestures';
 import {$, $$} from './helpers/dom';
 import isTouchDevice from './helpers/isTouchDevice';
-
+import postQuery from './helpers/postQuery';
 // Главный контейнер для карточек
 const parent = $('.cards-container');
 
-// Обход всех объектов данных
-for (let elementData of data.events) {
-  const type = findType(elementData);
-  const element = makeClone(type);
+getDataAndMakeCards(['critical', 'info'], 1, 10);
+const searchButton = $('#search');
+const typeSelect = $('#type');
+const pageInput = $('#page');
+const quantityInput = $('#quantity');
 
-  setIcon(element, elementData);
-  setAttr(element, elementData, 'title');
-  setAttr(element, elementData, 'source');
-  setAttr(element, elementData, 'time');
-  setDescription(element, elementData);
-
-  if (type === 'average-card-buttons') setButtons(element, elementData);
-  if (type === 'average-card-music') setMusic(element, elementData);
-  if (type === 'average-card-temperature') setTemperatureAndHumidity(element, elementData);
-  // Убрал из-за трудностей вопределении оргинального размера для 2 задания
-  // if (type === 'large-card-critical') setImage(element, elementData);
-  parent.appendChild(element);
+searchButton.addEventListener('click', ()=>{
+  let types;
+  if (typeSelect.value === 'all') {
+    types = ['critical', 'info'];
+  } else if (typeSelect.value === 'critical') {
+    types = ['critical'];
+  } else {
+    types = ['info'];
+  }
+  getDataAndMakeCards(types, parseInt(pageInput.value), parseInt(quantityInput.value));
+});
+/**
+ * @param {Array} types
+ * @param {number} page
+ * @param {number} itemsPerPage
+ * @returns {void}
+ */
+  function getDataAndMakeCards(types, page, itemsPerPage) {
+    // Обход всех объектов данных
+    postQuery('http://localhost:8000/api/events', {
+      types: types,
+      page: page,
+      itemsPerPage: itemsPerPage,
+    })
+    .then((data)=>{
+      console.log(data);
+      makeCards(data);
+    });
 }
 
-checkTitles();
-const cardsWithPhoto = $$('.card_large.card_critical');
+/**
+ * Главная функция которая  создает карточки
+ * @param {object} data
+ * @returns {void}
+ */
+function makeCards(data) {
+  parent.innerHTML ='';
+    for (let elementData of data.events) {
+      const type = findType(elementData);
+      const element = makeClone(type);
+      setIcon(element, elementData);
+      setAttr(element, elementData, 'title');
+      setAttr(element, elementData, 'source');
+      setAttr(element, elementData, 'time');
+      setDescription(element, elementData);
+      if (type === 'average-card-buttons') setButtons(element, elementData);
+      if (type === 'average-card-music') setMusic(element, elementData);
+      if (type === 'average-card-temperature') setTemperatureAndHumidity(element, elementData);
+      // Убрал из-за трудностей в определении оргинального размера для 2 задания
+      // if (type === 'large-card-critical') setImage(element, elementData);
+      parent.appendChild(element);
+    }
+    checkTitles();
+    const cardsWithPhoto = $$('.card_large.card_critical');
+    // Инициализация объектов класса управления жестов для карточек с изображениями
+    for (let cardWithPhoto of cardsWithPhoto) {
+      new ImageWithGestures(cardWithPhoto);
+    }
+    // Если устройство поддерживает тач, убираем ховер с карточек
+    if (isTouchDevice()) {
+      setMobileClasses();
+    }
+  }
 
-// Инициализация объектов класса управления жестов для карточек с изображениями
-for (let cardWithPhoto of cardsWithPhoto) {
-  new ImageWithGestures(cardWithPhoto);
-}
-// Если устройство поддерживает тач, убираем ховер с карточек
-if (isTouchDevice()) {
-  setMobileClasses();
-}
 
 /**
  * Определяю тип карточки исходя из входных данных

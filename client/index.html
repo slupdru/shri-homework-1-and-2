@@ -19,6 +19,14 @@
         <a class="menu__item">Сводка</a>
         <a class="menu__item">Устройства</a>
         <a class="menu__item">Сценарии</a>
+        <select class="menu__item" id="type">
+            <option value="info">info</option>
+            <option value="critical">crirical</option>
+            <option selected value="all">all</option>
+        </select>
+        <div class="menu__item"><span> Страница</span> <input value="1" id="page" type="text"></div>
+        <div class="menu__item"><span>Количество на странице</span> <input value="10" id="quantity" type="text"></div>
+        <button type="button" id="search">Поиск</button>
       </div>
       <img src="./images/icon_list_m@1x.svg" alt="" class="munu__mobile-button">
     </nav>

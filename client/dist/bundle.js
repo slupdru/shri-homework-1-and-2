@@ -126,11 +126,7 @@ __webpack_require__(3);
 
 __webpack_require__(4);
 
-var _events = __webpack_require__(5);
-
-var _events2 = _interopRequireDefault(_events);
-
-var _imageWithGestures = __webpack_require__(6);
+var _imageWithGestures = __webpack_require__(5);
 
 var _imageWithGestures2 = _interopRequireDefault(_imageWithGestures);
 
@@ -140,83 +136,128 @@ var _isTouchDevice = __webpack_require__(1);
 
 var _isTouchDevice2 = _interopRequireDefault(_isTouchDevice);
 
+var _postQuery = __webpack_require__(6);
+
+var _postQuery2 = _interopRequireDefault(_postQuery);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Главный контейнер для карточек
+
+// import data from './events';
 var parent = (0, _dom.$)('.cards-container');
 
-// Обход всех объектов данных
-var _iteratorNormalCompletion = true;
-var _didIteratorError = false;
-var _iteratorError = undefined;
+getDataAndMakeCards(['critical', 'info'], 1, 10);
+var searchButton = (0, _dom.$)('#search');
+var typeSelect = (0, _dom.$)('#type');
+var pageInput = (0, _dom.$)('#page');
+var quantityInput = (0, _dom.$)('#quantity');
 
-try {
-  for (var _iterator = _events2.default.events[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-    var elementData = _step.value;
-
-    var type = findType(elementData);
-    var element = makeClone(type);
-
-    setIcon(element, elementData);
-    setAttr(element, elementData, 'title');
-    setAttr(element, elementData, 'source');
-    setAttr(element, elementData, 'time');
-    setDescription(element, elementData);
-
-    if (type === 'average-card-buttons') setButtons(element, elementData);
-    if (type === 'average-card-music') setMusic(element, elementData);
-    if (type === 'average-card-temperature') setTemperatureAndHumidity(element, elementData);
-    // Убрал из-за трудностей вопределении оргинального размера для 2 задания
-    // if (type === 'large-card-critical') setImage(element, elementData);
-    parent.appendChild(element);
+searchButton.addEventListener('click', function () {
+  var types = void 0;
+  if (typeSelect.value === 'all') {
+    types = ['critical', 'info'];
+  } else if (typeSelect.value === 'critical') {
+    types = ['critical'];
+  } else {
+    types = ['info'];
   }
-} catch (err) {
-  _didIteratorError = true;
-  _iteratorError = err;
-} finally {
-  try {
-    if (!_iteratorNormalCompletion && _iterator.return) {
-      _iterator.return();
-    }
-  } finally {
-    if (_didIteratorError) {
-      throw _iteratorError;
-    }
-  }
+  getDataAndMakeCards(types, parseInt(pageInput.value), parseInt(quantityInput.value));
+});
+/**
+ * @param {Array} types
+ * @param {number} page
+ * @param {number} itemsPerPage
+ * @returns {void}
+ */
+function getDataAndMakeCards(types, page, itemsPerPage) {
+  // Обход всех объектов данных
+  (0, _postQuery2.default)('http://localhost:8000/api/events', {
+    types: types,
+    page: page,
+    itemsPerPage: itemsPerPage
+  }).then(function (data) {
+    console.log(data);
+    makeCards(data);
+  });
 }
 
-checkTitles();
-var cardsWithPhoto = (0, _dom.$$)('.card_large.card_critical');
+/**
+ * Главная функция которая  создает карточки
+ * @param {object} data
+ * @returns {void}
+ */
+function makeCards(data) {
+  parent.innerHTML = '';
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
 
-// Инициализация объектов класса управления жестов для карточек с изображениями
-var _iteratorNormalCompletion2 = true;
-var _didIteratorError2 = false;
-var _iteratorError2 = undefined;
-
-try {
-  for (var _iterator2 = cardsWithPhoto[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-    var cardWithPhoto = _step2.value;
-
-    new _imageWithGestures2.default(cardWithPhoto);
-  }
-  // Если устройство поддерживает тач, убираем ховер с карточек
-} catch (err) {
-  _didIteratorError2 = true;
-  _iteratorError2 = err;
-} finally {
   try {
-    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-      _iterator2.return();
+    for (var _iterator = data.events[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var elementData = _step.value;
+
+      var type = findType(elementData);
+      var element = makeClone(type);
+      setIcon(element, elementData);
+      setAttr(element, elementData, 'title');
+      setAttr(element, elementData, 'source');
+      setAttr(element, elementData, 'time');
+      setDescription(element, elementData);
+      if (type === 'average-card-buttons') setButtons(element, elementData);
+      if (type === 'average-card-music') setMusic(element, elementData);
+      if (type === 'average-card-temperature') setTemperatureAndHumidity(element, elementData);
+      // Убрал из-за трудностей в определении оргинального размера для 2 задания
+      // if (type === 'large-card-critical') setImage(element, elementData);
+      parent.appendChild(element);
     }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
   } finally {
-    if (_didIteratorError2) {
-      throw _iteratorError2;
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
     }
   }
-}
 
-if ((0, _isTouchDevice2.default)()) {
-  setMobileClasses();
+  checkTitles();
+  var cardsWithPhoto = (0, _dom.$$)('.card_large.card_critical');
+  // Инициализация объектов класса управления жестов для карточек с изображениями
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
+
+  try {
+    for (var _iterator2 = cardsWithPhoto[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var cardWithPhoto = _step2.value;
+
+      new _imageWithGestures2.default(cardWithPhoto);
+    }
+    // Если устройство поддерживает тач, убираем ховер с карточек
+  } catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+        _iterator2.return();
+      }
+    } finally {
+      if (_didIteratorError2) {
+        throw _iteratorError2;
+      }
+    }
+  }
+
+  if ((0, _isTouchDevice2.default)()) {
+    setMobileClasses();
+  }
 }
 
 /**
@@ -1926,137 +1967,6 @@ function setMobileClasses() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = {
-  'events': [{
-    'type': 'info',
-    'title': 'Еженедельный отчет по расходам ресурсов',
-    'source': 'Сенсоры потребления',
-    'time': '19:00, Сегодня',
-    'description': 'Так держать! За последнюю неделю вы потратили на 10% меньше ресурсов, чем неделей ранее.',
-    'icon': 'stats',
-    'data': {
-      'type': 'graph',
-      'values': [{
-        'electricity': [['1536883200', 115], ['1536969600', 117], ['1537056000', 117.2], ['1537142400', 118], ['1537228800', 120], ['1537315200', 123], ['1537401600', 129]]
-      }, {
-        'water': [['1536883200', 40], ['1536969600', 40.2], ['1537056000', 40.5], ['1537142400', 41], ['1537228800', 41.4], ['1537315200', 41.9], ['1537401600', 42.6]]
-      }, {
-        'gas': [['1536883200', 13], ['1536969600', 13.2], ['1537056000', 13.5], ['1537142400', 13.7], ['1537228800', 14], ['1537315200', 14.2], ['1537401600', 14.5]]
-      }]
-    },
-    'size': 'l'
-  }, {
-    'type': 'info',
-    'title': 'Дверь открыта',
-    'source': 'Сенсор входной двери',
-    'time': '18:50, Сегодня',
-    'description': null,
-    'icon': 'key',
-    'size': 's'
-  }, {
-    'type': 'info',
-    'title': 'Уборка закончена',
-    'source': 'Пылесос',
-    'time': '18:45, Сегодня',
-    'description': null,
-    'icon': 'robot-cleaner',
-    'size': 's'
-  }, {
-    'type': 'info',
-    'title': 'Новый пользователь',
-    'source': 'Роутер',
-    'time': '18:45, Сегодня',
-    'description': null,
-    'icon': 'router',
-    'size': 's'
-  }, {
-    'type': 'info',
-    'title': 'Изменен климатический режим',
-    'source': 'Сенсор микроклимата',
-    'time': '18:30, Сегодня',
-    'description': 'Установлен климатический режим «Фиджи»',
-    'icon': 'thermal',
-    'size': 'm',
-    'data': {
-      'temperature': 24,
-      'humidity': 80
-    }
-  }, {
-    'type': 'critical',
-    'title': 'Невозможно включить кондиционер',
-    'source': 'Кондиционер',
-    'time': '18:21, Сегодня',
-    'description': 'В комнате открыто окно, закройте его и повторите попытку',
-    'icon': 'ac',
-    'size': 'm'
-  }, {
-    'type': 'info',
-    'title': 'Музыка включена',
-    'source': 'Яндекс.Станция',
-    'time': '18:16, Сегодня',
-    'description': 'Сейчас проигрывается:',
-    'icon': 'music',
-    'size': 'm',
-    'data': {
-      'albumcover': 'https://avatars.yandex.net/get-music-content/193823/1820a43e.a.5517056-1/m1000x1000',
-      'artist': 'Florence & The Machine',
-      'track': {
-        'name': 'Big God',
-        'length': '4:31'
-      },
-      'volume': 80
-    }
-  }, {
-    'type': 'info',
-    'title': 'Заканчивается молоко',
-    'source': 'Холодильник',
-    'time': '17:23, Сегодня',
-    'description': 'Кажется, в холодильнике заканчивается молоко. Вы хотите добавить его в список покупок?',
-    'icon': 'fridge',
-    'size': 'm',
-    'data': {
-      'buttons': ['Да', 'Нет']
-    }
-  }, {
-    'type': 'info',
-    'title': 'Зарядка завершена',
-    'source': 'Оконный сенсор',
-    'time': '16:22, Сегодня',
-    'description': 'Ура! Устройство «Оконный сенсор» снова в строю!',
-    'icon': 'battery',
-    'size': 's'
-  }, {
-    'type': 'critical',
-    'title': 'Пылесос застрял',
-    'source': 'Сенсор движения',
-    'time': '16:17, Сегодня',
-    'description': 'Робопылесос не смог сменить свое местоположение в течение последних 3 минут. Похоже, ему нужна помощь.',
-    'icon': 'cam',
-    'data': {
-      'image': 'bitmap.png'
-    },
-    'size': 'l'
-  }, {
-    'type': 'info',
-    'title': 'Вода вскипела',
-    'source': 'Чайник',
-    'time': '16:20, Сегодня',
-    'description': null,
-    'icon': 'kettle',
-    'size': 's'
-  }]
-};
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -2357,6 +2267,29 @@ function findAngle(center, point1, point2) {
   var angle = Math.atan2(OA.x * OB.y - OA.y * OB.x, OA.x * OB.x + OA.y * OB.y);
   return angle;
 }
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+exports.default = function (path, body) {
+  return fetch(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    mode: 'cors',
+    credentials: 'same-origin',
+    body: JSON.stringify(body)
+  }).then(function (result) {
+    return result.json();
+  });
+};
 
 /***/ })
 /******/ ]);
