@@ -39,7 +39,6 @@ searchButton.addEventListener('click', ()=>{
       itemsPerPage: itemsPerPage,
     })
     .then((data)=>{
-      console.log(data);
       makeCards(data);
     });
 }

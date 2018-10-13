@@ -177,7 +177,6 @@ function getDataAndMakeCards(types, page, itemsPerPage) {
     page: page,
     itemsPerPage: itemsPerPage
   }).then(function (data) {
-    console.log(data);
     makeCards(data);
   });
 }
