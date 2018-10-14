@@ -19,7 +19,7 @@ module.exports = {
   plugins,
   watch: !inProduction,
   devtool: !inProduction && 'source-map',
-  entry: './js/main.js',
+  entry: './js/mainPage/main.js',
   output: {
     filename: './dist/bundle.js',
   },

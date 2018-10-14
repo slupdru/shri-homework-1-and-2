@@ -1,7 +1,7 @@
 const MIN_ROTATE_ANGLE = 0.6;
 const MIN_SCALE_DISTANСE = 30;
-import {$} from './helpers/dom';
-import isTouchDevice from './helpers/isTouchDevice';
+import {$} from '../helpers/dom';
+import isTouchDevice from '../helpers/isTouchDevice';
 /**
  * class управления жестами на картинке
  */

@@ -3,8 +3,8 @@ import '@/styles/main.scss';
 import '@/styles/allPages.scss';
 import data from './events';
 import ImageWithGestures from './imageWithGestures';
-import {$, $$} from './helpers/dom';
-import isTouchDevice from './helpers/isTouchDevice';
+import {$, $$} from '../helpers/dom';
+import isTouchDevice from '../helpers/isTouchDevice';
 
 // Главный контейнер для карточек
 const parent = $('.cards-container');
