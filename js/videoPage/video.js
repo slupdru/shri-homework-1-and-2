@@ -21,8 +21,8 @@ function createCanvas() {
  * @returns {void}
  */
 function setCanvasSize(canvas, width, height) {
-    canvas.width = width;
-    canvas.height = height;
+  if (canvas.width !== width) canvas.width = width;
+  if (canvas.height !== height) canvas.height = height;
 
     return canvas;
 }
@@ -201,7 +201,8 @@ function openVideo(video) {
         drawDiff(ctx, diff, smallWidth);
       }
       oldImageData = imageData;
-      requestAnimationFrame(loop);
+
+      if (video === MyVideo) requestAnimationFrame(loop);
     };
     loop();
 }
