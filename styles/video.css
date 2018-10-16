@@ -18,6 +18,10 @@ body {
   border-bottom: 1px #f0f0f0 solid;
 }
 .canvas__container{
+  transition: transform 0s;
+  transform: scale(0.000000001);
+  margin: auto;
+  width:60%;
   color: white;
 }
 .canvas__range-line{
@@ -32,6 +36,7 @@ body {
 }
 
 .analizator{
+  display: none;
   top:60%;
   width:200px;
   height: 100px;
@@ -167,10 +172,6 @@ body {
 #main_canvas{
   width: 100%;
 }
-.canvas__container{
-  margin: auto;
-  width:60%;
-}
 #start{
   background: wheat;
   height: 5px;
@@ -181,16 +182,26 @@ body {
   background: black;
 }
 .video__fullscreen-conatiner{
-  display: none;
+  display: flex;
+  width: 0;
+  height: 0;
   position: absolute;
+  background: rgba(0, 0, 0, 0.473);
+}
+.video__fullscreen-conatiner.video__fullscreen-conatiner_open .canvas__container{
+  transition: transform 1s;
+  transform: scale(1);
+}
+.video__fullscreen-conatiner.video__fullscreen-conatiner_open .analizator{
+  display: block;
+}
+.video__fullscreen-conatiner.video__fullscreen-conatiner_open{
   top:0;
   left:0;
   bottom: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.473);
-}
-.video__fullscreen-conatiner.video__fullscreen-conatiner_open{
-  display: flex;
+  width: unset;
+  height: unset;
 }
 @media (max-width: 1613px) {
   .all-video-container{

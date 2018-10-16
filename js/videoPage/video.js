@@ -238,6 +238,7 @@ const contrastRange = document.querySelector('#ContrastRange');
 const analyseElem = document.querySelector('.analizator__indicatorblock');
 const volumeRange = document.querySelector('#VolumeRange');
 const fullscreenContainer = document.querySelector('.video__fullscreen-conatiner');
+const canvasContainer = document.querySelector('.canvas__container');
 let MyVideo;
 let MyAudioContext;
 const backButton = document.querySelector('#backButton');
@@ -250,8 +251,9 @@ contrastRange.addEventListener('change', () => {
   updateFilters(canvas, filtersValues);
 });
 videoArray.forEach((el)=>{
-  el.addEventListener('click', function() {
+  el.addEventListener('click', function(e) {
     fullscreenContainer.classList.add('video__fullscreen-conatiner_open');
+    canvasContainer.style.transformOrigin = `${e.clientX}px ${e.clientY}px`
     openVideo(this);
   });
 });
