@@ -3,29 +3,51 @@ const DIFF_THRESHOLD = 20;
 const BLOCK_SIZE = 10;
 const I_BLOCK_SIZE = 1 / BLOCK_SIZE;
 const DELAY_VIDEO_COMPARE = 1;
-
+const AUDIO_SCALE = 1/5;
+/**
+ * Создает Canvas
+ * @returns {window.HTMLElement}
+ */
 function createCanvas() {
     const canvas = document.createElement('canvas');
 
     return canvas;
 }
-
+/**
+ * Задает размеры canvas
+ * @param {window.HTMLElement} canvas
+ * @param {number} width
+ * @param {number} height
+ * @returns {void}
+ */
 function setCanvasSize(canvas, width, height) {
     canvas.width = width;
     canvas.height = height;
 
     return canvas;
 }
-
+/**
+ *  Получаем контекс canvas
+ * @param {window.HTMLElement} canvas
+ * @returns {object}
+ */
 function getCanvasContext(canvas) {
     return canvas.getContext('2d');
 }
-
-
+/**
+ * @param {number} a
+ * @param {number} b
+ * @returns {boolean}
+ */
 function simpleCompare(a, b) {
     return Math.abs(a - b) < DIFF_THRESHOLD;
 }
-
+/**
+ * Сравниваем два кадра
+ * @param {Array} dataA
+ * @param {Array} dataB
+ * @returns {Array}
+ */
 function compare(dataA, dataB) {
     if (!dataA || !dataB || dataA.length !== dataB.length) {
         return false;
@@ -46,7 +68,13 @@ function compare(dataA, dataB) {
 
     return result;
 }
-
+/**
+ *  Рисует квадраты в изменившихся блоках
+ * @param {object} ctx
+ * @param {Array} diff
+ * @param {number} lineLength
+ * @returns {void}
+ */
 function drawDiff(ctx, diff, lineLength) {
     const length = diff.length;
 
@@ -86,14 +114,19 @@ function initVideo(video, url) {
     });
   }
 }
-
+/**
+ * Анализатор звука
+ * @param {window.HTMLElement} video
+ * @param {window.HTMLElement} scaleElem - Элемент который будет изменяться в результате работы Анализатора
+ * @param {Function} callBack - Функция которая изменяет scaleElem
+ * @returns {void}
+ */
 function Analyse(video, scaleElem, callBack) {
   AudioContext = window.AudioContext || window.webkitAudioContext;
   MyAudioContext = new AudioContext();
   const source = MyAudioContext.createMediaElementSource(video);
   const analyser = MyAudioContext.createAnalyser();
   const scriptProcessor = MyAudioContext.createScriptProcessor(2048, 1, 1);
-
   source.connect(analyser);
   source.connect(scriptProcessor);
   analyser.connect(MyAudioContext.destination);
@@ -106,20 +139,37 @@ function Analyse(video, scaleElem, callBack) {
     callBack(averageValue, scaleElem);
 };
 }
-
+/**
+ * Изменяет scale при получении среднего значение громкости
+ * @param {number} averageValue - среднее значение громкости
+ * @param {*} scaleElem
+ * @returns {void}
+ */
 function AnalyseCallBack(averageValue, scaleElem) {
-  scaleElem.style.transform = `scaleY(${averageValue/5})`;
+  scaleElem.style.transform = `scaleY(${averageValue * AUDIO_SCALE})`;
 }
-
+/**
+ * Обновляет зачение css фильтров
+ * @param {window.HTMLElement} canvas
+ * @param {object} data
+ * @returns {void}
+ */
 function updateFilters(canvas, data) {
   canvas.style.filter =`brightness(${data.brightness}%) contrast(${data.contrast}%)`;
-  console.log(canvas.style.filter);
 }
+/**
+ *  Реагирует на изменение громкости
+ * @returns {void}
+ */
 function volumeRangeListner() {
-  console.log(MyVideo);
   MyVideo.muted = false;
   MyVideo.volume = volumeRange.value / 100;
 }
+/**
+ * Открывает видео в fullscreen
+ * @param {window.HTMLElement} video
+ * @returns {void}
+ */
 function openVideo(video) {
   MyVideo = video;
   volumeRange.removeEventListener('change', volumeRangeListner);
@@ -187,7 +237,6 @@ const brightnessRange = document.querySelector('#BrightnessRange');
 const contrastRange = document.querySelector('#ContrastRange');
 const analyseElem = document.querySelector('.analizator__indicatorblock');
 const volumeRange = document.querySelector('#VolumeRange');
-const volumeContainer = document.querySelector('#volume_container');
 const fullscreenContainer = document.querySelector('.video__fullscreen-conatiner');
 let MyVideo;
 let MyAudioContext;
@@ -197,7 +246,6 @@ brightnessRange.addEventListener('change', () => {
   updateFilters(canvas, filtersValues);
 });
 contrastRange.addEventListener('change', () => {
-   console.log(contrastRange.value);
   filtersValues.contrast = contrastRange.value;
   updateFilters(canvas, filtersValues);
 });
