@@ -29,7 +29,13 @@ body {
   margin-top:5px;
   justify-content: space-between;
 }
-
+.video-and-canvas-container{
+  position: relative;
+}
+#main_video{
+  height: 100%;
+  width: 100%;
+}
 .analizator{
   display: none;
   top:60%;
@@ -129,7 +135,13 @@ body {
 
 }
 #main_canvas{
-  width: 100%;
+position: absolute;
+height: 100%;
+width: 100%;
+top:0;
+left:0;
+right: 0;
+bottom: 0;
 }
 #start{
   background: wheat;
@@ -221,7 +233,8 @@ body {
     display: none;
   }
   .canvas__container{
-    width:100%;
+    max-height: 100%;
+    width:90%;
   }
   .video__fullscreen-conatiner.video__fullscreen-conatiner_open{
     width: 100vw;

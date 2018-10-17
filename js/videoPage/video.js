@@ -4,6 +4,12 @@ const BLOCK_SIZE = 10;
 const I_BLOCK_SIZE = 1 / BLOCK_SIZE;
 const DELAY_VIDEO_COMPARE = 1;
 const AUDIO_SCALE = 1/5;
+const videoDictionary = {
+  'video-1': 'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fsosed%2Fmaster.m3u8',
+  'video-2': 'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fcat%2Fmaster.m3u8',
+  'video-3': 'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fdog%2Fmaster.m3u8',
+  'video-4': 'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fhall%2Fmaster.m3u8',
+};
 /**
  * Создает Canvas
  * @returns {window.HTMLElement}
@@ -27,7 +33,7 @@ function setCanvasSize(canvas, width, height) {
     return canvas;
 }
 /**
- *  Получаем контекс canvas
+ * Получаем контекс canvas
  * @param {window.HTMLElement} canvas
  * @returns {object}
  */
@@ -69,7 +75,7 @@ function compare(dataA, dataB) {
     return result;
 }
 /**
- *  Рисует квадраты в изменившихся блоках
+ * Рисует квадраты в изменившихся блоках
  * @param {object} ctx
  * @param {Array} diff
  * @param {number} lineLength
@@ -77,8 +83,6 @@ function compare(dataA, dataB) {
  */
 function drawDiff(ctx, diff, lineLength) {
     const length = diff.length;
-
-    ctx.save();
 
     ctx.lineWidth = 2;
     ctx.strokeStyle = '#fff';
@@ -121,9 +125,9 @@ function initVideo(video, url) {
  * @param {Function} callBack - Функция которая изменяет scaleElem
  * @returns {void}
  */
-function Analyse(video, scaleElem, callBack) {
+function analyse(video, scaleElem, callBack) {
   AudioContext = window.AudioContext || window.webkitAudioContext;
-  MyAudioContext = new AudioContext();
+  const MyAudioContext = new AudioContext();
   const source = MyAudioContext.createMediaElementSource(video);
   const analyser = MyAudioContext.createAnalyser();
   const scriptProcessor = MyAudioContext.createScriptProcessor(2048, 1, 1);
@@ -162,8 +166,8 @@ function updateFilters(canvas, data) {
  * @returns {void}
  */
 function volumeRangeListner() {
-  MyVideo.muted = false;
-  MyVideo.volume = volumeRange.value / 100;
+  mainVideo.muted = false;
+  mainVideo.volume = volumeRange.value / 100;
 }
 /**
  * Открывает видео в fullscreen
@@ -172,24 +176,28 @@ function volumeRangeListner() {
  */
 function openVideo(video) {
   MyVideo = video;
-  volumeRange.removeEventListener('change', volumeRangeListner);
-  volumeRange.addEventListener('change', volumeRangeListner);
-  Analyse(video, analyseElem, AnalyseCallBack);
+  initVideo(
+    mainVideo,
+    videoDictionary[video.id]
+  );
   let oldImageData;
   const smallCtx = getCanvasContext(smallCanvas);
   const ctx = getCanvasContext(canvas);
   let counter = Infinity;
   let diff;
+  /**
+   * Цикл отрисовки в canvas
+   * @returns {void}
+   */
     const loop = () => {
-      const width = video.videoWidth;
-      const height = video.videoHeight;
+      const width = mainVideo.videoWidth;
+      const height = mainVideo.videoHeight;
       const smallWidth = Math.ceil(width * I_BLOCK_SIZE);
       const smallHeight = Math.ceil(height * I_BLOCK_SIZE);
       setCanvasSize(smallCanvas, smallWidth, smallHeight);
       setCanvasSize(canvas, width, height);
-
-      smallCtx.drawImage(video, 0, 0, smallWidth, smallHeight);
-      ctx.drawImage(video, 0, 0, width, height);
+      smallCtx.drawImage(mainVideo, 0, 0, smallWidth, smallHeight);
+      ctx.clearRect(0, 0, width, height);
       const imageData = smallCtx.getImageData(0, 0, smallWidth || 1, smallHeight || 1).data;
       if (counter < DELAY_VIDEO_COMPARE && diff) {
         counter++;
@@ -207,25 +215,13 @@ function openVideo(video) {
     loop();
 }
 
-initVideo(
-  document.getElementById('video-1'),
-  'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fsosed%2Fmaster.m3u8'
-);
+for (let i = 1; i <= 4; i++) {
+  initVideo(
+    document.getElementById(`video-${i}`),
+    videoDictionary[`video-${i}`]
+  );
+}
 
-initVideo(
-  document.getElementById('video-2'),
-  'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fcat%2Fmaster.m3u8'
-);
-
-initVideo(
-  document.getElementById('video-3'),
-  'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fdog%2Fmaster.m3u8'
-);
-
-initVideo(
-  document.getElementById('video-4'),
-  'http://localhost:9191/master?url=http%3A%2F%2Flocalhost%3A3102%2Fstreams%2Fhall%2Fmaster.m3u8'
-);
 
 const filtersValues = {
   brightness: 100,
@@ -234,6 +230,7 @@ const filtersValues = {
 const canvas = document.querySelector('#main_canvas');
 const videoArray =document.querySelectorAll('.video');
 const smallCanvas = createCanvas();
+const mainVideo = document.querySelector('#main_video');
 const brightnessRange = document.querySelector('#BrightnessRange');
 const contrastRange = document.querySelector('#ContrastRange');
 const analyseElem = document.querySelector('.analizator__indicatorblock');
@@ -241,8 +238,12 @@ const volumeRange = document.querySelector('#VolumeRange');
 const fullscreenContainer = document.querySelector('.video__fullscreen-conatiner');
 const canvasContainer = document.querySelector('.canvas__container');
 let MyVideo;
-let MyAudioContext;
 const backButton = document.querySelector('#backButton');
+
+analyse(mainVideo, analyseElem, AnalyseCallBack);
+
+volumeRange.addEventListener('change', volumeRangeListner);
+
 brightnessRange.addEventListener('change', () => {
   filtersValues.brightness = brightnessRange.value;
   updateFilters(canvas, filtersValues);
@@ -254,12 +255,13 @@ contrastRange.addEventListener('change', () => {
 videoArray.forEach((el)=>{
   el.addEventListener('click', function(e) {
     fullscreenContainer.classList.add('video__fullscreen-conatiner_open');
-    canvasContainer.style.transformOrigin = `${e.clientX}px ${e.clientY}px`
+    canvasContainer.style.transformOrigin = `${e.clientX}px ${e.clientY}px`;
     openVideo(this);
   });
 });
 backButton.addEventListener('click', ()=>{
-  MyAudioContext.close();
+  mainVideo.muted = true;
+  volumeRange.value = 0;
   fullscreenContainer.classList.remove('video__fullscreen-conatiner_open');
 });
 
