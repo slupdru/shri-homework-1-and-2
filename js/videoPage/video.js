@@ -246,11 +246,11 @@ volumeRange.addEventListener('change', volumeRangeListner);
 
 brightnessRange.addEventListener('change', () => {
   filtersValues.brightness = brightnessRange.value;
-  updateFilters(canvas, filtersValues);
+  updateFilters(mainVideo, filtersValues);
 });
 contrastRange.addEventListener('change', () => {
   filtersValues.contrast = contrastRange.value;
-  updateFilters(canvas, filtersValues);
+  updateFilters(mainVideo, filtersValues);
 });
 videoArray.forEach((el)=>{
   el.addEventListener('click', function(e) {
