@@ -4,11 +4,12 @@
   "description": "homework-1-2",
   "main": "index.js",
   "scripts": {
+    "http-server": "http-server -p 8000 --cors",
     "clear": "rimraf ./dist",
     "build": "npm run clear && NODE_ENV=production webpack --progress --hide-modules",
     "serve": "npm run clear && NODE_ENV=development webpack --progress --hide-modules",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint:script": "eslint .",
+    "lint:script": "eslint . --fix",
     "lint:style": "stylelint ./styles",
     "lint": "npm run lint:script && npm run lint:style"
   },
@@ -32,6 +33,7 @@
     "eslint": "^5.4.0",
     "eslint-config-google": "^0.9.1",
     "extract-text-webpack-plugin": "^3.0.2",
+    "http-server": "^0.11.1",
     "node-sass": "^4.9.3",
     "pepjs": "^0.4.3",
     "postcss-loader": "^3.0.0",
