@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="robots" content="noindex">
+  <title>Video surveillance</title>
+  <link rel="stylesheet" href="./dist/video.css">
+</head>
+
+<body>
+  <header>
+    <nav class="menu">
+      <a href="index.html"><img class="menu__logo" src="./images/ЯндексДом@2x.png"></a>
+      <div class="menu__collaps-block">
+        <a href="index.html" class="menu__item menu__item_active">События</a>
+        <a class="menu__item">Сводка</a>
+        <a class="menu__item">Устройства</a>
+        <a class="menu__item">Сценарии</a>
+        <a class="menu__item" href="videoPage.html">Видео</a>
+      </div>
+      <img src="./images/icon_list_m@1x.svg" alt="" class="munu__mobile-button">
+    </nav>
+
+  </header>
+
+  <main class="main">
+    <div class="main__container">
+      <div class="main__title">Видеонаблюдение</div>
+      <div class="all-video-container">
+        <video id="video-1" class="video" muted autoplay></video>
+        <video id="video-2" class="video" muted autoplay></video>
+        <video id="video-3" class="video"  muted autoplay></video>
+        <video id="video-4" class="video"  muted autoplay></video>
+      </div>
+    </div>
+    <div class="video__fullscreen-conatiner">            
+      <div class="analizator">
+        <div class="analizator__indicatorblock"></div>
+        <div class="analizator__downblock"></div>
+      </div>
+      <div class="canvas__container">
+        <div class="video-and-canvas-container">
+            <video id="main_video" muted autoplay></video>
+            <canvas id="main_canvas"></canvas>
+        </div>
+            <div class="canvas__range-line">
+              <div class="canvas__range-block">
+                  <label  for="Brightness">Brightness</label>
+                  <input type="range" id="BrightnessRange" name="Brightness"
+                         min="0" max="200" />
+              </div>
+              <div class="canvas__range-block" id="volume_container">
+                  <label  for="volume">Volume</label>
+                  <input type="range" id="VolumeRange" name="volume"
+                         min="0" max="100" value="0" />
+              </div>
+              <div class="canvas__range-block">
+                  <label  for="contrast">Contrast</label>
+                  <input type="range" id="ContrastRange" name="contrast"
+                         min="0" max="200" />
+              </div>
+              <button id="backButton">Назад</button>
+            </div>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer__leftblock">
+      <a class="footer__element">Помощь</a>
+      <a class="footer__element">Обратная связь</a>
+      <a class="footer__element">Разработчикам</a>
+      <a class="footer__element">Условия пользования</a>
+    </div>
+    <div class="footer__rightblock">
+      © 2001–2017 ООО «Яндекс»
+    </div>
+  </footer>
+
+  <script src="dist/video.bundle.js"></script>
+
+</body>
+
+</html>

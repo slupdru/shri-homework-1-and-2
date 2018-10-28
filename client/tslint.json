@@ -1,0 +1,10 @@
+{
+  "defaultSeverity": "error",
+  "linterOptions": {
+    "exclude": ["ts/mainPage/events.ts"]
+  },
+  "extends": ["tslint:recommended"],
+  "jsRules": {},
+  "rules": {},
+  "rulesDirectory": []
+}
