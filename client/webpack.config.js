@@ -1,30 +1,49 @@
 /* global require, process, module, __dirname */
-const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const inProduction = process.env.NODE_ENV === 'production';
 
 const plugins = [
-  new ExtractTextPlugin({filename: './dist/bundle.css'}),
+  new MiniCssExtractPlugin({
+    filename: '[name].css',
+    chunkFilename: '[id].css',
+  }),
 ];
+let optimization={};
 if (inProduction) {
-  plugins.push(new webpack.optimize.UglifyJsPlugin({
-    include: /^bundle\.js$/,
-    minimize: true,
-  }));
+  optimization = {
+    minimizer: [
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        uglifyOptions: {
+          compress: false,
+          ecma: 6,
+          mangle: true,
+        },
+        sourceMap: true,
+      }),
+    ],
+  };
 }
 
 module.exports = {
   plugins,
+  optimization,
   watch: !inProduction,
   devtool: !inProduction && 'source-map',
-  entry: './js/mainPage/main.js',
+  entry: {
+    main: './ts/mainPage/main.ts',
+    video: './ts/videoPage/video.ts',
+},
   output: {
-    filename: './dist/bundle.js',
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.tsx', '.ts', '.js'],
     alias: {
       '@': `${__dirname}`,
     },
@@ -32,43 +51,31 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.tsx?$/,
+        use: 'ts-loader',
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['env'],
-        },
       },
       {
           test: /\.scss$/,
-          use: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: [
-              {
-                loader: 'css-loader',
-                options: {
-                  minimize: inProduction,
-                },
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            {
+              loader: 'postcss-loader',
+              options: {
+                plugins: [
+                  autoprefixer({
+                    browsers: [
+                      '> 1%',
+                      'last 4 version',
+                      'not ie <= 8',
+                    ],
+                  }),
+                ],
               },
-              {
-                loader: 'postcss-loader',
-                options: {
-                  plugins: [
-                    autoprefixer({
-                      browsers: [
-                        '> 1%',
-                        'last 4 version',
-                        'not ie <= 8',
-                      ],
-                    }),
-                  ],
-                },
-              },
-              {
-                loader: 'sass-loader',
-              },
-            ],
-          }),
+            },
+            'sass-loader',
+          ],
         },
       {
         test: /\.(png|svg|jpg|gif)$/,

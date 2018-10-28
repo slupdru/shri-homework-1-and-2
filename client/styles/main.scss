@@ -239,7 +239,6 @@
   flex-direction: column;
   margin-bottom: 0;
 }
-
 .card__image-container {
   touch-action: none;
   overflow: hidden;
@@ -255,9 +254,15 @@
 .card__picture-line {
   width: 100%;
 }
-.card__picture-line-zoom {
+#canvas_image{
+  touch-action: none;
   pointer-events: none;
-  transform: scale(2);
+  width: 100%;
+}
+.card__picture-line-zoom {
+  display: none;
+  touch-action: none;
+  pointer-events: none;
   transform-origin: left top;
 }
 .card__scrollbar {
@@ -265,7 +270,7 @@
   position: absolute;
   height: 3px;
   border-radius: 5px;
-  bottom: 1px;
+  bottom: 7px;
   background-color: #fff;
   z-index: 5;
 }
@@ -320,9 +325,6 @@
   }
 }
 @media (max-width: 706px) {
-  .cards-container {
-    grid-gap: 17px;
-  }
   .card_large .card__title-line {
     margin-bottom: 16px;
   }

@@ -23,9 +23,6 @@ body {
   height: 27px;
   margin-right: 21px;
 }
-.menu__item:visited, .menu__item:link{
-  color:#333;
-}
 .menu__item {
   text-decoration: none;
   margin-right: 28px;
@@ -33,6 +30,10 @@ body {
   opacity: 0.6;
   font-weight: bold;
 }
+.menu__item:visited, .menu__item:link{
+  color:#333;
+}
+
 .menu__item.menu__item_active {
   opacity: 1;
 }
