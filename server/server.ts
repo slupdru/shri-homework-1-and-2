@@ -6,7 +6,7 @@ import fs from "fs";
 const startTime: Date = new Date();
 const port: number = 8000;
 const app: express.Application = express();
-
+let state: object | null = null;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -39,6 +39,14 @@ app.post("/api/events", (req: Request, res: Response) => {
       res.json({events: result});
     });
   }
+});
+
+app.post("/api/savestate", (req: Request, res: Response) => {
+  state = req.body;
+  res.send(true);
+});
+app.post("/api/getstate", (req: Request, res: Response) => {
+  res.send(state || false);
 });
 
 app.all("*", (req: Request, res: Response) => {
